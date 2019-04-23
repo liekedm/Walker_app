@@ -1,9 +1,12 @@
 <resources>
+
+    <!-- OverAll -->
     <string name="app_name">Walker</string>
     <string name="title_1">Exercises</string>
     <string name="title_2">Data</string>
     <string name="title_3">Profile</string>
-    <string name="infoexercise">More Information</string>
+
+    <!-- Exercises -->
     <string name="exercise1">Exersice 1</string>
     <string name="infoexercise1">Make a step each count</string>
     <string name="exercise2">Exersice 2</string>
@@ -11,4 +14,11 @@
     <string name="exercise3">Exersice 3</string>
     <string name="infoexercise3">Get a vibration when the weighbaring is wrong</string>
     <string name="empty">  </string>
+
+    <!-- Profile -->
+    <string name="name">Name</string>
+    <string name="weight">Weight</string>
+    <string name="weightinfo">Used to determine weight bearing</string>
+    <string name="weightbaring">Maximum weight bearing</string>
+    <string name="messege">Messege from therapist</string>
 </resources>

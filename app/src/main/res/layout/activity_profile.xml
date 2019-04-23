@@ -11,4 +11,191 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <!-- Name -->
+
+    <ImageView
+        android:id="@+id/iv_bg_name"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:layout_marginStart="-2dp"
+        android:layout_marginTop="150dp"
+        android:layout_marginEnd="-2dp"
+        android:background="@android:color/darker_gray"
+        android:padding="0.1dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@android:color/background_light" />
+
+    <TextView
+        android:id="@+id/tv_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:text="@string/name"
+        android:textColor="@color/colorAccent"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/iv_bg_name"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/iv_bg_name" />
+
+    <EditText
+        android:id="@+id/editName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:imeOptions="actionDone"
+        android:textColor="@color/colorText"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="@+id/iv_bg_name"
+        app:layout_constraintEnd_toEndOf="@+id/iv_bg_name"
+        app:layout_constraintTop_toTopOf="@+id/iv_bg_name" />
+
+    <!-- Weight -->
+
+    <ImageView
+        android:id="@+id/iv_bg_weight"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:layout_marginStart="-2dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="-2dp"
+        android:background="@android:color/darker_gray"
+        android:padding="0.1dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/iv_bg_name"
+        app:srcCompat="@android:color/background_light" />
+
+    <TextView
+        android:id="@+id/tv_weight"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:text="@string/weight"
+        android:textColor="@color/colorAccent"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/iv_bg_weight"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/iv_bg_weight"
+        app:layout_constraintVertical_bias="0.36" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="4dp"
+        android:text="@string/weightinfo"
+        android:textColor="@color/colorText"
+        android:textSize="12sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_weight" />
+
+    <EditText
+        android:id="@+id/editWeight"
+        android:layout_width="130dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:ems="10"
+        android:inputType="numberDecimal"
+        android:imeOptions="actionDone"
+        android:textColor="@color/colorText"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="@+id/iv_bg_weight"
+        app:layout_constraintEnd_toEndOf="@+id/iv_bg_weight"
+        app:layout_constraintTop_toTopOf="@+id/iv_bg_weight" />
+
+    <!-- Weightbearing -->
+
+    <ImageView
+        android:id="@+id/iv_bg_weightbearing"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:layout_marginStart="-2dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="-2dp"
+        android:background="@android:color/darker_gray"
+        android:padding="0.1dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/iv_bg_weight"
+        app:srcCompat="@android:color/background_light" />
+
+    <TextView
+        android:id="@+id/tv_weightbearing"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:text="@string/weightbaring"
+        android:textColor="@color/colorAccent"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/iv_bg_weightbearing"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/iv_bg_weightbearing" />
+
+    <EditText
+        android:id="@+id/editWeightbearing"
+        android:layout_width="130dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:ems="10"
+        android:inputType="numberDecimal"
+        android:imeOptions="actionDone"
+        android:textColor="@color/colorText"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="@+id/iv_bg_weightbearing"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/iv_bg_weightbearing" />
+
+    <!-- Message -->
+
+    <ImageView
+        android:id="@+id/iv_bg_messege"
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:layout_marginStart="-2dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="-2dp"
+        android:background="@android:color/darker_gray"
+        android:padding="0.1dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/iv_bg_weightbearing"
+        app:srcCompat="@android:color/background_light" />
+
+    <TextView
+        android:id="@+id/tv_messege"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="24dp"
+        android:text="@string/messege"
+        android:textColor="@color/colorAccent"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/iv_bg_messege" />
+
+    <EditText
+        android:id="@+id/editMessege"
+        android:layout_width="330dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:ems="10"
+        android:inputType="textMultiLine"
+        android:imeOptions="actionDone"
+        android:textColor="@color/colorText"
+        android:textSize="14sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/iv_bg_messege"
+        app:layout_constraintTop_toBottomOf="@+id/tv_messege" />
+
+
 </android.support.constraint.ConstraintLayout>
