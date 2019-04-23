@@ -16,7 +16,11 @@
     <string name="empty">  </string>
 
     <!-- Profile -->
-    <string name="name">Name</string>
+    <string name="limb">Effected Limb</string>
+    <string-array name="limb_array">
+        <item>Left</item>
+        <item>Right</item>
+    </string-array>
     <string name="weight">Weight</string>
     <string name="weightinfo">Used to determine weight bearing</string>
     <string name="weightbaring">Maximum weight bearing</string>
