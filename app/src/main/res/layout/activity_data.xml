@@ -11,8 +11,10 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <!-- Image -->
+
     <ImageView
-        android:id="@+id/imageView2"
+        android:id="@+id/iv_left"
         android:layout_width="200dp"
         android:layout_height="200dp"
         android:layout_marginStart="8dp"
@@ -21,6 +23,61 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/dataweightbearing" />
+        app:srcCompat="@drawable/dataweightbearing_left" />
+
+    <ImageView
+        android:id="@+id/iv_right"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="150dp"
+        android:layout_marginEnd="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/dataweightbearing_right" />
+
+    <!-- Weightbearing -->
+
+    <ImageView
+        android:id="@+id/iv_bg_weightbearing"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:layout_marginStart="-2dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="-2dp"
+        android:background="@android:color/darker_gray"
+        android:padding="0.1dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/iv_right"
+        app:srcCompat="@android:color/background_light" />
+
+    <TextView
+        android:id="@+id/tv_weightbearing"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:text="@string/weightbearinglimb"
+        android:textColor="@color/colorAccent"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/iv_bg_weightbearing"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/iv_bg_weightbearing" />
+
+    <TextView
+        android:id="@+id/averageWeightbearing"
+        android:layout_width="60dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:ems="10"
+        android:text="xxx"
+        android:textColor="@color/colorText"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="@+id/iv_bg_weightbearing"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/iv_bg_weightbearing" />
+
 
 </android.support.constraint.ConstraintLayout>

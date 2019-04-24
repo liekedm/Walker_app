@@ -5,10 +5,16 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
-        <item name="android:spinnerItemStyle">@style/yourStyleForSpinnerItem</item>
+        <item name="android:spinnerStyle">@style/yourStyleForSpinnerItem</item>
+        <item name="android:spinnerDropDownItemStyle">@style/yourStyleForSpinnerItem</item>
+        <item name="android:listViewStyle">@style/yourStyleForSpinnerItem</item>
     </style>
 
     <style name="yourStyleForSpinnerItem">
+        <item name="android:textColor">@color/colorText</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:paddingLeft">15dp</item>
     </style>
 
 </resources>

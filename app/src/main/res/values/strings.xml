@@ -20,6 +20,9 @@
     <string name="infoexercise3">Get a vibration when the weighbaring is wrong</string>
     <string name="empty">  </string>
 
+    <!-- Data -->
+    <string name="weightbearinglimb">Weightbearing in effected limb</string>
+
     <!-- Profile -->
     <string name="limb">Effected Limb</string>
     <string-array name="limb_array">

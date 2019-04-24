@@ -84,7 +84,7 @@ public class profile extends AppCompatActivity{
     protected void getdata() {
         SharedPreferences sp = getSharedPreferences("sharedprefs", Activity.MODE_PRIVATE);
         final Spinner spinner = findViewById(R.id.editLimb);
-        if ((sp.getString(limb, " ").equals("Right"))) {
+        if ((sp.getString(limb, "Left").equals("Right"))) {
             spinner.setSelection(1);
         } else {
             spinner.setSelection(0);
