@@ -93,12 +93,15 @@
     <ImageButton
         android:id="@+id/btn_bluetooth"
         style="@android:style/Widget.Holo.ImageButton"
-        android:layout_width="50dp"
-        android:layout_height="60dp"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
         android:adjustViewBounds="true"
         android:background="@null"
         android:cropToPadding="false"
         android:scaleType="centerInside"
+        app:layout_constraintBottom_toTopOf="@+id/textView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/bluetooth" />

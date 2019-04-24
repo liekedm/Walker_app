@@ -5,6 +5,11 @@
     <string name="title_1">Exercises</string>
     <string name="title_2">Data</string>
     <string name="title_3">Profile</string>
+    <string name="on">ON</string>
+    <string name="off">OFF</string>
+
+    <!-- Bluetooth -->
+    <string name="bluetooth">Bluetooth</string>
 
     <!-- Exercises -->
     <string name="exercise1">Exersice 1</string>

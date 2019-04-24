@@ -1,7 +1,5 @@
 package com.lademare.walkingaid;
 
-//bluetooth using tutorial: Android Bluetooth Connectivity Tutorial - Sarthi Technology
-
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
@@ -32,7 +30,6 @@ public class exercises extends AppCompatActivity implements SensorEventListener 
     boolean ex_1 = false;
     boolean ex_2 = false;
     boolean ex_3 = false;
-    int REQUEST_ENABLE_BT = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,32 +39,11 @@ public class exercises extends AppCompatActivity implements SensorEventListener 
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LOCKED);
 
-        BluetoothAdapter bluetoothAdapter=BluetoothAdapter.getDefaultAdapter();
-        if (bluetoothAdapter == null) {
-            Toast.makeText(getApplicationContext(),"Device doesnt Support Bluetooth",Toast.LENGTH_SHORT).show();
-        }
-        else if (!bluetoothAdapter.isEnabled()){
-           Intent enableBluetoothIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-           startActivityForResult(enableBluetoothIntent, REQUEST_ENABLE_BT);
-        }
-
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
 
         menu();
         startexercises();
     }
-
-//    @Override
-//    protected void onActivityResults(int requestCode, int resultCode, Intent data){
-//        if(requestCode==REQUEST_ENABLE_BT){
-//            if(resultCode==RESULT_OK){
-//                //Bluetooth is enabled
-//            }
-//            else if(resultCode==RESULT_CANCELED){
-//                //Bluetooth enabling is cancelled
-//            }
-//        }
-//    }
 
     protected void menu() {
         Button btn_data = findViewById(R.id.btn_data);
