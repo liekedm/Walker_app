@@ -25,6 +25,7 @@ public class profile extends AppCompatActivity{
     EditText editWeightbearing;
     EditText editMessege;
 
+    public static final String limb = "limb";
     public static final String weight = "weight";
     public static final String weightbearing = "weightbearing";
     public static final String messege = "messege";
@@ -82,6 +83,12 @@ public class profile extends AppCompatActivity{
 
     protected void getdata() {
         SharedPreferences sp = getSharedPreferences("sharedprefs", Activity.MODE_PRIVATE);
+        final Spinner spinner = findViewById(R.id.editLimb);
+        if ((sp.getString(limb, " ").equals("Right"))) {
+            spinner.setSelection(1);
+        } else {
+            spinner.setSelection(0);
+        }
         editWeight.setText(String.valueOf(sp.getInt(weight, 80)));
         editWeightbearing.setText(String.valueOf(sp.getInt(weightbearing, 80)));
         editMessege.setText(sp.getString(messege, " "));
