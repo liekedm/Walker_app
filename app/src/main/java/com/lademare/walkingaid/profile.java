@@ -12,6 +12,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -68,6 +69,13 @@ public class profile extends AppCompatActivity{
             public void onClick(View view) {
                 startActivity(new Intent(profile.this, data.class));
                 editdata();
+            }
+        });
+        ImageButton btn_bluetooth = findViewById(R.id.btn_bluetooth);
+        btn_bluetooth.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(profile.this, bluetooth.class));
             }
         });
     }

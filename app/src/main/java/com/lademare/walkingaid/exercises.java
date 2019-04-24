@@ -1,5 +1,7 @@
 package com.lademare.walkingaid;
 
+//bluetooth using tutorial: Android Bluetooth Connectivity Tutorial - Sarthi Technology
+
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
@@ -18,6 +20,7 @@ import android.os.Vibrator;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
@@ -29,6 +32,7 @@ public class exercises extends AppCompatActivity implements SensorEventListener 
     boolean ex_1 = false;
     boolean ex_2 = false;
     boolean ex_3 = false;
+    int REQUEST_ENABLE_BT = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,12 +46,28 @@ public class exercises extends AppCompatActivity implements SensorEventListener 
         if (bluetoothAdapter == null) {
             Toast.makeText(getApplicationContext(),"Device doesnt Support Bluetooth",Toast.LENGTH_SHORT).show();
         }
+        else if (!bluetoothAdapter.isEnabled()){
+           Intent enableBluetoothIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+           startActivityForResult(enableBluetoothIntent, REQUEST_ENABLE_BT);
+        }
 
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
 
         menu();
         startexercises();
     }
+
+//    @Override
+//    protected void onActivityResults(int requestCode, int resultCode, Intent data){
+//        if(requestCode==REQUEST_ENABLE_BT){
+//            if(resultCode==RESULT_OK){
+//                //Bluetooth is enabled
+//            }
+//            else if(resultCode==RESULT_CANCELED){
+//                //Bluetooth enabling is cancelled
+//            }
+//        }
+//    }
 
     protected void menu() {
         Button btn_data = findViewById(R.id.btn_data);
@@ -64,6 +84,13 @@ public class exercises extends AppCompatActivity implements SensorEventListener 
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(exercises.this, profile.class));
+            }
+        });
+        ImageButton btn_bluetooth = findViewById(R.id.btn_bluetooth);
+        btn_bluetooth.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(exercises.this, bluetooth.class));
             }
         });
     }
