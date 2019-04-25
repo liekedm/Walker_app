@@ -24,6 +24,8 @@
 
     <!-- Data -->
     <string name="weightbearinglimb">Weightbearing in effected limb</string>
+    <string name="weightbearingaverage">Average weightbaring</string>
+    <string name="weightbearinglive">Live measurement</string>
 
     <!-- Profile -->
     <string name="limb">Effected Limb</string>

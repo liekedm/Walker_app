@@ -67,11 +67,10 @@ public class bluetooth extends AppCompatActivity {
 
     protected void bluetooth_list_new() {
         ListView lv_bt_new = findViewById(R.id.lv_bt_new);
-        Set<BluetoothDevice>bt=myBluetoothAdapter.getBondedDevices();
         myAdapter.startDiscovery();
         IntentFilter intentFilter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
         registerReceiver(myReciever,intentFilter);
-        arrayAdapter = new ArrayAdapter<String>(getApplicationContext(),android.R.layout.simple_list_item_1,stringArrayList);
+        arrayAdapter = new ArrayAdapter<>(getApplicationContext(),android.R.layout.simple_list_item_1,stringArrayList);
         lv_bt_new.setAdapter(arrayAdapter);
         TextView tv_list_new = findViewById(R.id.tv_list_new);
         lv_bt_new.setVisibility(View.VISIBLE);
@@ -100,6 +99,10 @@ public class bluetooth extends AppCompatActivity {
             bluetooth_list_new();
         } else {
             btn_btstate.setChecked(false);
+            TextView tv_list = findViewById(R.id.tv_list);
+            TextView tv_list_new = findViewById(R.id.tv_list_new);
+            tv_list.setVisibility(View.INVISIBLE);
+            tv_list_new.setVisibility(View.INVISIBLE);
         }
         btn_btstate.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -115,8 +118,12 @@ public class bluetooth extends AppCompatActivity {
                     myBluetoothAdapter.disable();
                     TextView tv_list = findViewById(R.id.tv_list);
                     ListView lv_bt = findViewById(R.id.lv_bt);
+                    TextView tv_list_new = findViewById(R.id.tv_list_new);
+                    ListView lv_bt_new = findViewById(R.id.lv_bt_new);
                     tv_list.setVisibility(View.INVISIBLE);
                     lv_bt.setVisibility(View.INVISIBLE);
+                    lv_bt_new.setVisibility(View.INVISIBLE);
+                    tv_list_new.setVisibility(View.INVISIBLE);
                 }
             }
         });

@@ -66,7 +66,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="30dp"
         android:text="@string/list"
         android:textColor="@color/colorText"
         android:textSize="14sp"
@@ -80,7 +80,7 @@
         android:text="@string/found"
         android:textColor="@color/colorText"
         android:textSize="14sp"
-        tools:layout_editor_absoluteX="272dp"
-        tools:layout_editor_absoluteY="242dp" />
+        app:layout_constraintStart_toStartOf="@+id/lv_bt_new"
+        app:layout_constraintTop_toTopOf="@+id/tv_list" />
 
 </android.support.constraint.ConstraintLayout>

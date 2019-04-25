@@ -13,12 +13,15 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
+import android.widget.ToggleButton;
 
 public class data extends AppCompatActivity {
 
     public static final String limb = "limb";
     public static final String weight = "weight";
     public static final String weightbearing = "weightbearing";
+    boolean lm = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
