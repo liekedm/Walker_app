@@ -6,44 +6,48 @@
     android:layout_height="match_parent"
     tools:context=".bluetooth">
 
-    <ImageView
-        android:id="@+id/iv_bg"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@color/colorMenutext" />
-
     <include
         android:id="@+id/include"
         layout="@layout/bottommenu"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <ListView
-        android:id="@+id/lv_bt"
-        android:layout_width="345dp"
+        android:id="@+id/lv_bt_new"
+        android:layout_width="150dp"
         android:layout_height="61dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
+        android:layout_marginEnd="32dp"
         android:textColor="@color/colorText"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/lv_bt" />
+
+    <ListView
+        android:id="@+id/lv_bt"
+        android:layout_width="150dp"
+        android:layout_height="61dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="8dp"
+        android:textColor="@color/colorText"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btn_btstate" />
+        app:layout_constraintTop_toBottomOf="@+id/tv_list" />
 
     <ToggleButton
         android:id="@+id/btn_btstate"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="80dp"
+        android:layout_height="50dp"
         android:layout_marginEnd="32dp"
         android:background="@color/colorAccent"
+        android:fontFamily="sans-serif"
         android:textColor="@android:color/white"
-        android:textOff="OFF"
-        android:textOn="ON"
+        android:textOff="@string/off"
+        android:textOn="@string/on"
+        android:textSize="12sp"
         app:layout_constraintBottom_toBottomOf="@+id/tv_bluetooth"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/tv_bluetooth" />
+        app:layout_constraintTop_toTopOf="@+id/tv_bluetooth"
+        app:layout_constraintVertical_bias="0.379" />
 
     <TextView
         android:id="@+id/tv_bluetooth"
@@ -56,5 +60,27 @@
         android:textSize="14sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tv_list"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="24dp"
+        android:text="@string/list"
+        android:textColor="@color/colorText"
+        android:textSize="14sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btn_btstate" />
+
+    <TextView
+        android:id="@+id/tv_list_new"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/found"
+        android:textColor="@color/colorText"
+        android:textSize="14sp"
+        tools:layout_editor_absoluteX="272dp"
+        tools:layout_editor_absoluteY="242dp" />
 
 </android.support.constraint.ConstraintLayout>

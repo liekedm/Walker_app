@@ -10,6 +10,8 @@
 
     <!-- Bluetooth -->
     <string name="bluetooth">Bluetooth</string>
+    <string name="list">Paired devices</string>
+    <string name="found">Discover devices</string>
 
     <!-- Exercises -->
     <string name="exercise1">Exersice 1</string>

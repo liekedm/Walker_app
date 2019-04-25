@@ -4,7 +4,10 @@ package com.lademare.walkingaid;
 
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.ActivityInfo;
 import android.graphics.Color;
 import android.support.annotation.Nullable;
@@ -19,6 +22,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
+import java.util.ArrayList;
 import java.util.Set;
 
 public class bluetooth extends AppCompatActivity {
@@ -26,6 +30,9 @@ public class bluetooth extends AppCompatActivity {
     BluetoothAdapter myBluetoothAdapter;
     Intent btEnablingIntent;
     int requestCodeForEnable;
+    ArrayList<String> stringArrayList = new ArrayList<String>();
+    ArrayAdapter<String> arrayAdapter;
+    BluetoothAdapter myAdapter = BluetoothAdapter.getDefaultAdapter();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,24 +45,50 @@ public class bluetooth extends AppCompatActivity {
         menu();
         myBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         bluetooth_on_off();
-        bluetooth_list();
     }
 
     protected void bluetooth_list() {
-        ToggleButton btn_btstate = findViewById(R.id.btn_btstate);
         ListView lv_bt = findViewById(R.id.lv_bt);
         Set<BluetoothDevice>bt=myBluetoothAdapter.getBondedDevices();
         String[] strings = new String[bt.size()];
         int index=0;
         if(bt.size()>0){
-            for(BluetoothDevice device:bt){
-                strings[index]=device.getName();
-                index++;
-            }
-            ArrayAdapter<String>arrayAdapter = new ArrayAdapter<String>(getApplicationContext(),android.R.layout.simple_list_item_1,strings);
-            //listView.setAdapter(arrayAdapter);
+           for(BluetoothDevice device:bt){
+              strings[index]=device.getName();
+              index++;
+           }
+           ArrayAdapter<String>arrayAdapter = new ArrayAdapter<String>(getApplicationContext(),android.R.layout.simple_list_item_1,strings);
+           lv_bt.setAdapter(arrayAdapter);
         }
+        TextView tv_list = findViewById(R.id.tv_list);
+        lv_bt.setVisibility(View.VISIBLE);
+        tv_list.setVisibility(View.VISIBLE);
     }
+
+    protected void bluetooth_list_new() {
+        ListView lv_bt_new = findViewById(R.id.lv_bt_new);
+        Set<BluetoothDevice>bt=myBluetoothAdapter.getBondedDevices();
+        myAdapter.startDiscovery();
+        IntentFilter intentFilter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
+        registerReceiver(myReciever,intentFilter);
+        arrayAdapter = new ArrayAdapter<String>(getApplicationContext(),android.R.layout.simple_list_item_1,stringArrayList);
+        lv_bt_new.setAdapter(arrayAdapter);
+        TextView tv_list_new = findViewById(R.id.tv_list_new);
+        lv_bt_new.setVisibility(View.VISIBLE);
+        tv_list_new.setVisibility(View.VISIBLE);
+    }
+
+    BroadcastReceiver myReciever = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            if(BluetoothDevice.ACTION_FOUND.equals(action)){
+                BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
+                stringArrayList.add(device.getName());
+                arrayAdapter.notifyDataSetChanged();
+            }
+        }
+    };
 
     protected void bluetooth_on_off() {
         btEnablingIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
@@ -63,6 +96,8 @@ public class bluetooth extends AppCompatActivity {
         ToggleButton btn_btstate = findViewById(R.id.btn_btstate);
         if (myBluetoothAdapter.isEnabled()){
             btn_btstate.setChecked(true);
+            bluetooth_list();
+            bluetooth_list_new();
         } else {
             btn_btstate.setChecked(false);
         }
@@ -78,7 +113,10 @@ public class bluetooth extends AppCompatActivity {
                 }
                 if (myBluetoothAdapter.isEnabled()){
                     myBluetoothAdapter.disable();
-                    Toast.makeText(getApplicationContext(),"Bluetooth is disabled", Toast.LENGTH_LONG).show();
+                    TextView tv_list = findViewById(R.id.tv_list);
+                    ListView lv_bt = findViewById(R.id.lv_bt);
+                    tv_list.setVisibility(View.INVISIBLE);
+                    lv_bt.setVisibility(View.INVISIBLE);
                 }
             }
         });
@@ -89,7 +127,8 @@ public class bluetooth extends AppCompatActivity {
         ToggleButton btn_btstate = findViewById(R.id.btn_btstate);
         if(requestCode==requestCodeForEnable){
             if(resultCode==RESULT_OK){
-                Toast.makeText(getApplicationContext(),"Bluetooth is enabled",Toast.LENGTH_LONG).show();
+                bluetooth_list();
+                bluetooth_list_new();
             }
             else if(resultCode==RESULT_CANCELED){
                 Toast.makeText(getApplicationContext(),"Bluetooth enabling cancelled",Toast.LENGTH_LONG).show();
