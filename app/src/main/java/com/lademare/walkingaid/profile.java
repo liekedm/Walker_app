@@ -8,16 +8,12 @@ import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.Spinner;
 import android.widget.TextView;
-
-import java.util.ArrayList;
-import java.util.List;
+import android.widget.Toast;
+import android.widget.ToggleButton;
 
 public class profile extends AppCompatActivity{
 
@@ -41,13 +37,6 @@ public class profile extends AppCompatActivity{
         editWeight = findViewById(R.id.editWeight);
         editWeightbearing = findViewById(R.id.editWeightbearing);
         editMessege = findViewById(R.id.editMessege);
-        Spinner spinner = findViewById(R.id.editLimb);
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
-                R.array.limb_array, android.R.layout.simple_spinner_item);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        SharedPreferences sp = getSharedPreferences("sharedprefs", Activity.MODE_PRIVATE);
-        spinner.setSelection(sp.getInt("position",0));
-        spinner.setAdapter(adapter);
 
         menu();
         getdata();
@@ -83,11 +72,11 @@ public class profile extends AppCompatActivity{
 
     protected void getdata() {
         SharedPreferences sp = getSharedPreferences("sharedprefs", Activity.MODE_PRIVATE);
-        final Spinner spinner = findViewById(R.id.editLimb);
+        ToggleButton left_right = findViewById(R.id.left_right);
         if ((sp.getString(limb, "Left").equals("Right"))) {
-            spinner.setSelection(1);
+            left_right.setChecked(true);
         } else {
-            spinner.setSelection(0);
+            left_right.setChecked(false);
         }
         editWeight.setText(String.valueOf(sp.getInt(weight, 80)));
         editWeightbearing.setText(String.valueOf(sp.getInt(weightbearing, 80)));
@@ -97,13 +86,15 @@ public class profile extends AppCompatActivity{
     protected void editdata() {
         SharedPreferences sp = getSharedPreferences("sharedprefs", Activity.MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
-        final Spinner spinner = findViewById(R.id.editLimb);
-        editor.putInt("position", spinner.getSelectedItemPosition());
-        String spinnerlimb = spinner.getSelectedItem().toString();
+        ToggleButton left_right = findViewById(R.id.left_right);
+        if (left_right.isChecked()) {
+            editor.putString("limb", "Right");
+        } else {
+            editor.putString("limb", "Left");
+        }
         int weight = Integer.parseInt(editWeight.getText().toString());
         int weightbearing = Integer.parseInt(editWeightbearing.getText().toString());
         String messege = editMessege.getText().toString();
-        editor.putString("limb", spinnerlimb);
         editor.putInt("weight", weight);
         editor.putInt("weightbearing", weightbearing);
         editor.putString("messege", messege);

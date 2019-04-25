@@ -33,7 +33,6 @@ public class data extends AppCompatActivity {
         SharedPreferences sp = getSharedPreferences("sharedprefs", Activity.MODE_PRIVATE);
         ImageView iv_left = findViewById(R.id.iv_left);
         ImageView iv_right = findViewById(R.id.iv_right);
-        final Spinner spinner = findViewById(R.id.editLimb);
         if ((sp.getString(limb, "Left").equals("Right"))) {
             iv_left.setVisibility(View.INVISIBLE);
             iv_right.setVisibility(View.VISIBLE);
