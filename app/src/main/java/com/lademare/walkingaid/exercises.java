@@ -2,6 +2,7 @@ package com.lademare.walkingaid;
 
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothSocket;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -22,6 +23,8 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
+
+import java.io.InputStream;
 
 public class exercises extends AppCompatActivity implements SensorEventListener {
 
@@ -126,6 +129,12 @@ public class exercises extends AppCompatActivity implements SensorEventListener 
     public void onSensorChanged(SensorEvent event) {
         if (running) {
             if(ex_2){
+                AudioManager audioManager = (AudioManager)getSystemService(Context.AUDIO_SERVICE);
+                if (audioManager.isWiredHeadsetOn()){
+                    Toast.makeText(this, "headphone detected", Toast.LENGTH_SHORT).show();
+                    audioManager.setMode(AudioManager.MODE_IN_CALL);
+                    audioManager.setSpeakerphoneOn(false);
+                }
                 ToneGenerator toneG = new ToneGenerator(AudioManager.STREAM_ALARM, 50);
                 toneG.startTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD, 100);
             }

@@ -28,11 +28,20 @@ import java.util.Set;
 public class bluetooth extends AppCompatActivity {
 
     BluetoothAdapter myBluetoothAdapter;
+    BluetoothDevice[] btArray;
     Intent btEnablingIntent;
     int requestCodeForEnable;
     ArrayList<String> stringArrayList = new ArrayList<String>();
     ArrayAdapter<String> arrayAdapter;
     BluetoothAdapter myAdapter = BluetoothAdapter.getDefaultAdapter();
+
+    static final int STATE_LISTENING = 1;
+    static final int STATE_CONNECTING = 2;
+    static final int STATE_CONNECTED = 3;
+    static final int STATE_CONNECTION_FAILED = 4;
+    static final int STATE_MESSAGE_RECEIVED = 5;
+
+    int REQUEST_ENABLE_BLUETOOTH = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
