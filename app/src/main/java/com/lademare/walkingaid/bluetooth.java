@@ -4,12 +4,15 @@ package com.lademare.walkingaid;
 
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothSocket;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.ActivityInfo;
 import android.graphics.Color;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -22,8 +25,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Set;
+import java.util.UUID;
 
 public class bluetooth extends AppCompatActivity {
 
@@ -42,6 +48,9 @@ public class bluetooth extends AppCompatActivity {
     static final int STATE_MESSAGE_RECEIVED = 5;
 
     int REQUEST_ENABLE_BLUETOOTH = 1;
+
+    private static final String APP_NAME = "WalkingAid";
+    private static final UUID MY_UUID=UUID.fromString("f49cd6e5-ffeb-4e3c-a27a-f02d3517cb43");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,17 +83,53 @@ public class bluetooth extends AppCompatActivity {
         tv_list.setVisibility(View.VISIBLE);
     }
 
-    protected void bluetooth_list_new() {
-        ListView lv_bt_new = findViewById(R.id.lv_bt_new);
-        myAdapter.startDiscovery();
-        IntentFilter intentFilter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
-        registerReceiver(myReciever,intentFilter);
-        arrayAdapter = new ArrayAdapter<>(getApplicationContext(),android.R.layout.simple_list_item_1,stringArrayList);
-        lv_bt_new.setAdapter(arrayAdapter);
-        TextView tv_list_new = findViewById(R.id.tv_list_new);
-        lv_bt_new.setVisibility(View.VISIBLE);
-        tv_list_new.setVisibility(View.VISIBLE);
-    }
+    Handler handler = new Handler(new Handler.Callback() {
+        @Override
+        public boolean handleMessage(Message msg) {
+            switch (msg.what){
+                case STATE_LISTENING:
+                    Toast.makeText(getApplicationContext(),"listening",Toast.LENGTH_LONG).show();
+                    break;
+                case STATE_CONNECTING:
+                    Toast.makeText(getApplicationContext(),"connecting",Toast.LENGTH_LONG).show();
+                    break;
+                case STATE_CONNECTED:
+                    Toast.makeText(getApplicationContext(),"connected",Toast.LENGTH_LONG).show();
+                    break;
+                case STATE_CONNECTION_FAILED:
+                    Toast.makeText(getApplicationContext(),"connection failed",Toast.LENGTH_LONG).show();
+                    break;
+                case STATE_MESSAGE_RECEIVED:
+                    //
+                    break;
+            }
+            return true;
+        }
+    });
+
+//    private class Receive extends Thread{
+//        private final BluetoothSocket bluetoothSocket;
+//        private final InputStream inputStream;
+//        public Receive (BluetoothSocket socket){
+//            bluetoothSocket=socket;
+//            inputStream tempIn=null;
+//            try {
+//                tempIn=bluetoothSocket.getInputStream();
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//            inputStream=tempIn;
+//        }
+//        public void run(){
+//            byte[] buffer = new byte [1024];
+//            int bytes;
+//            while (true){
+//                inputStream.read(buffer);
+//            } catch (IOException e){
+//                e.printStackTrace();
+//            }
+//        }
+//    }
 
     BroadcastReceiver myReciever = new BroadcastReceiver() {
         @Override
@@ -105,13 +150,10 @@ public class bluetooth extends AppCompatActivity {
         if (myBluetoothAdapter.isEnabled()){
             btn_btstate.setChecked(true);
             bluetooth_list();
-            bluetooth_list_new();
         } else {
             btn_btstate.setChecked(false);
             TextView tv_list = findViewById(R.id.tv_list);
-            TextView tv_list_new = findViewById(R.id.tv_list_new);
             tv_list.setVisibility(View.INVISIBLE);
-            tv_list_new.setVisibility(View.INVISIBLE);
         }
         btn_btstate.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -127,12 +169,8 @@ public class bluetooth extends AppCompatActivity {
                     myBluetoothAdapter.disable();
                     TextView tv_list = findViewById(R.id.tv_list);
                     ListView lv_bt = findViewById(R.id.lv_bt);
-                    TextView tv_list_new = findViewById(R.id.tv_list_new);
-                    ListView lv_bt_new = findViewById(R.id.lv_bt_new);
                     tv_list.setVisibility(View.INVISIBLE);
                     lv_bt.setVisibility(View.INVISIBLE);
-                    lv_bt_new.setVisibility(View.INVISIBLE);
-                    tv_list_new.setVisibility(View.INVISIBLE);
                 }
             }
         });
@@ -144,7 +182,6 @@ public class bluetooth extends AppCompatActivity {
         if(requestCode==requestCodeForEnable){
             if(resultCode==RESULT_OK){
                 bluetooth_list();
-                bluetooth_list_new();
             }
             else if(resultCode==RESULT_CANCELED){
                 Toast.makeText(getApplicationContext(),"Bluetooth enabling cancelled",Toast.LENGTH_LONG).show();
