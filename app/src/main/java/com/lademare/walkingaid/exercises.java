@@ -1,8 +1,6 @@
 package com.lademare.walkingaid;
 
 import android.app.Activity;
-import android.bluetooth.BluetoothAdapter;
-import android.bluetooth.BluetoothSocket;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -20,19 +18,25 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
-
-import java.io.InputStream;
 
 public class exercises extends AppCompatActivity implements SensorEventListener {
 
     SensorManager sensorManager;
     boolean running = false;
-    boolean ex_1 = false;
-    boolean ex_2 = false;
-    boolean ex_3 = false;
+    boolean ex_1;
+    boolean ex_2;
+    boolean ex_3;
+    boolean ex_1_start = false;
+    boolean ex_2_start = false;
+    boolean ex_3_start = false;
+    public static final String ex_1_status = "ex_1_status";
+    public static final String ex_2_status = "ex_2_status";
+    public static final String ex_3_status = "ex_3_status";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +49,7 @@ public class exercises extends AppCompatActivity implements SensorEventListener 
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
 
         menu();
+        checkexercisestatus();
         startexercises();
     }
 
@@ -74,17 +79,43 @@ public class exercises extends AppCompatActivity implements SensorEventListener 
         });
     }
 
-    protected void startexercises() {
+    protected void checkexercisestatus() {
+        SharedPreferences sp = getSharedPreferences("sharedprefs", Activity.MODE_PRIVATE);
+        ex_1 = sp.getBoolean(ex_1_status, false);
+        ex_2 = sp.getBoolean(ex_2_status, false);
+        ex_3 = sp.getBoolean(ex_3_status, false);
         ToggleButton btn_ex_1 = findViewById(R.id.btn_ex_1);
+        if (ex_1){
+            btn_ex_1.setChecked(true);
+            ex_1 = true;
+        } else{ btn_ex_1.setChecked(false);}
+        ToggleButton btn_ex_2 = findViewById(R.id.btn_ex_2);
+        if (ex_2){
+            btn_ex_2.setChecked(true);
+            ex_2 = true;
+        } else{ btn_ex_2.setChecked(false);}
+        ToggleButton btn_ex_3 = findViewById(R.id.btn_ex_3);
+        if (ex_3){
+            btn_ex_1.setChecked(true);
+            ex_3 = true;
+        } else{ btn_ex_3.setChecked(false);}
+    }
+
+    protected void startexercises() {
+        ToggleButton btn_ex_1 = findViewById(R.id.btn_ex_1);;
         btn_ex_1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (ex_1) {
-                    Toast.makeText(getApplicationContext(),"Exercise 1 stopped",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(),"Exercise 1 stopped",Toast.LENGTH_SHORT).show(); ex_1_start = false;
                 } else {
-                    Toast.makeText(getApplicationContext(),"Exercise 1 started",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(),"Exercise 1 started",Toast.LENGTH_SHORT).show(); ex_1_start = true;
                 }
                 ex_1 = !ex_1;
+                SharedPreferences sp = getSharedPreferences("sharedprefs", Activity.MODE_PRIVATE);
+                SharedPreferences.Editor editor = sp.edit();
+                editor.putBoolean("ex_1_status",  ex_1);
+                editor.apply();
             }
         });
         ToggleButton btn_ex_2 = findViewById(R.id.btn_ex_2);
@@ -92,11 +123,15 @@ public class exercises extends AppCompatActivity implements SensorEventListener 
             @Override
             public void onClick(View view) {
                 if (ex_2) {
-                    Toast.makeText(getApplicationContext(),"Exercise 2 stopped",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(),"Exercise 2 stopped",Toast.LENGTH_SHORT).show(); ex_2_start = false;
                 } else {
-                    Toast.makeText(getApplicationContext(),"Exercise 2 started",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(),"Exercise 2 started",Toast.LENGTH_SHORT).show(); ex_2_start = true;
                 }
                 ex_2 = !ex_2;
+                SharedPreferences sp = getSharedPreferences("sharedprefs", Activity.MODE_PRIVATE);
+                SharedPreferences.Editor editor = sp.edit();
+                editor.putBoolean("ex_2_status",  ex_2);
+                editor.apply();
             }
         });
         ToggleButton btn_ex_3 = findViewById(R.id.btn_ex_3);
@@ -104,11 +139,15 @@ public class exercises extends AppCompatActivity implements SensorEventListener 
             @Override
             public void onClick(View view) {
                 if (ex_3) {
-                    Toast.makeText(getApplicationContext(),"Exercise 3 stopped",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(),"Exercise 3 stopped",Toast.LENGTH_SHORT).show(); ex_3_start = false;
                 } else {
-                    Toast.makeText(getApplicationContext(),"Exercise 3 started",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(),"Exercise 3 started",Toast.LENGTH_SHORT).show(); ex_3_start = true;
                 }
                 ex_3 = !ex_3;
+                SharedPreferences sp = getSharedPreferences("sharedprefs", Activity.MODE_PRIVATE);
+                SharedPreferences.Editor editor = sp.edit();
+                editor.putBoolean("ex_3_status",  ex_3);
+                editor.apply();
             }
         });
     }
@@ -128,7 +167,7 @@ public class exercises extends AppCompatActivity implements SensorEventListener 
     @Override
     public void onSensorChanged(SensorEvent event) {
         if (running) {
-            if(ex_2){
+            if(ex_2_start){
                 AudioManager audioManager = (AudioManager)getSystemService(Context.AUDIO_SERVICE);
                 if (audioManager.isWiredHeadsetOn()){
                     Toast.makeText(this, "headphone detected", Toast.LENGTH_SHORT).show();
@@ -138,7 +177,7 @@ public class exercises extends AppCompatActivity implements SensorEventListener 
                 ToneGenerator toneG = new ToneGenerator(AudioManager.STREAM_ALARM, 50);
                 toneG.startTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD, 100);
             }
-            if(ex_3){
+            if(ex_3_start){
                 Vibrator vibrator = (Vibrator)getSystemService(Context.VIBRATOR_SERVICE);
                 vibrator.vibrate(100);
             }

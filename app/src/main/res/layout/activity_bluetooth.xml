@@ -15,18 +15,9 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <ListView
-        android:id="@+id/lv_bt_new"
-        android:layout_width="150dp"
-        android:layout_height="61dp"
-        android:layout_marginEnd="32dp"
-        android:textColor="@color/colorText"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/lv_bt" />
-
-    <ListView
         android:id="@+id/lv_bt"
         android:layout_width="150dp"
-        android:layout_height="61dp"
+        android:layout_height="250dp"
         android:layout_marginStart="32dp"
         android:layout_marginTop="8dp"
         android:textColor="@color/colorText"
@@ -74,13 +65,14 @@
         app:layout_constraintTop_toBottomOf="@+id/btn_btstate" />
 
     <TextView
-        android:id="@+id/tv_list_new"
+        android:id="@+id/textView3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/found"
-        android:textColor="@color/colorText"
-        android:textSize="14sp"
-        app:layout_constraintStart_toStartOf="@+id/lv_bt_new"
-        app:layout_constraintTop_toTopOf="@+id/tv_list" />
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:text="TextView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/lv_bt"
+        app:layout_constraintTop_toTopOf="@+id/lv_bt" />
 
 </android.support.constraint.ConstraintLayout>
