@@ -1,6 +1,7 @@
 package com.lademare.walkingaid;
 
 import android.app.Activity;
+import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -26,6 +27,7 @@ import android.widget.ToggleButton;
 public class exercises extends AppCompatActivity implements SensorEventListener {
 
     SensorManager sensorManager;
+    BluetoothAdapter myBluetoothAdapter;
     boolean running = false;
     boolean ex_1;
     boolean ex_2;
@@ -47,6 +49,7 @@ public class exercises extends AppCompatActivity implements SensorEventListener 
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LOCKED);
 
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+        myBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
         menu();
         checkexercisestatus();
@@ -109,7 +112,9 @@ public class exercises extends AppCompatActivity implements SensorEventListener 
                 if (ex_1) {
                     Toast.makeText(getApplicationContext(),"Exercise 1 stopped",Toast.LENGTH_SHORT).show(); ex_1_start = false;
                 } else {
-                    Toast.makeText(getApplicationContext(),"Exercise 1 started",Toast.LENGTH_SHORT).show(); ex_1_start = true;
+                    if(!myBluetoothAdapter.isEnabled()) {
+                        Toast.makeText(getApplicationContext(),"Turn on bluetooth",Toast.LENGTH_SHORT).show(); ex_3_start = true;}
+                    else {Toast.makeText(getApplicationContext(),"Exercise 1 started",Toast.LENGTH_SHORT).show(); ex_1_start = true;}
                 }
                 ex_1 = !ex_1;
                 SharedPreferences sp = getSharedPreferences("sharedprefs", Activity.MODE_PRIVATE);
@@ -125,7 +130,9 @@ public class exercises extends AppCompatActivity implements SensorEventListener 
                 if (ex_2) {
                     Toast.makeText(getApplicationContext(),"Exercise 2 stopped",Toast.LENGTH_SHORT).show(); ex_2_start = false;
                 } else {
-                    Toast.makeText(getApplicationContext(),"Exercise 2 started",Toast.LENGTH_SHORT).show(); ex_2_start = true;
+                    if(!myBluetoothAdapter.isEnabled()) {
+                        Toast.makeText(getApplicationContext(),"Turn on bluetooth",Toast.LENGTH_SHORT).show(); ex_3_start = true;}
+                    else {Toast.makeText(getApplicationContext(),"Exercise 2 started",Toast.LENGTH_SHORT).show(); ex_2_start = true; }
                 }
                 ex_2 = !ex_2;
                 SharedPreferences sp = getSharedPreferences("sharedprefs", Activity.MODE_PRIVATE);
@@ -141,7 +148,9 @@ public class exercises extends AppCompatActivity implements SensorEventListener 
                 if (ex_3) {
                     Toast.makeText(getApplicationContext(),"Exercise 3 stopped",Toast.LENGTH_SHORT).show(); ex_3_start = false;
                 } else {
-                    Toast.makeText(getApplicationContext(),"Exercise 3 started",Toast.LENGTH_SHORT).show(); ex_3_start = true;
+                    if(!myBluetoothAdapter.isEnabled()) {
+                        Toast.makeText(getApplicationContext(),"Turn on bluetooth",Toast.LENGTH_SHORT).show(); ex_3_start = true;}
+                    else{ Toast.makeText(getApplicationContext(),"Exercise 3 started",Toast.LENGTH_SHORT).show(); ex_3_start = true;}
                 }
                 ex_3 = !ex_3;
                 SharedPreferences sp = getSharedPreferences("sharedprefs", Activity.MODE_PRIVATE);

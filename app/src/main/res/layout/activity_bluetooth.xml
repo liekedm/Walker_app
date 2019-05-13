@@ -6,17 +6,9 @@
     android:layout_height="match_parent"
     tools:context=".bluetooth">
 
-    <include
-        android:id="@+id/include"
-        layout="@layout/bottommenu"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
     <ListView
         android:id="@+id/lv_bt"
-        android:layout_width="150dp"
+        android:layout_width="350dp"
         android:layout_height="250dp"
         android:layout_marginStart="32dp"
         android:layout_marginTop="8dp"
@@ -57,22 +49,40 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="50dp"
         android:text="@string/list"
         android:textColor="@color/colorText"
         android:textSize="14sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btn_btstate" />
+        app:layout_constraintTop_toBottomOf="@+id/tv_bluetooth" />
 
     <TextView
-        android:id="@+id/textView3"
+        android:id="@+id/connected"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
-        android:text="TextView"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/lv_bt"
-        app:layout_constraintTop_toTopOf="@+id/lv_bt" />
+        android:layout_marginStart="24dp"
+        android:text="not connected"
+        android:textColor="@color/colorText"
+        android:textSize="14sp"
+        app:layout_constraintStart_toEndOf="@+id/tv_list"
+        app:layout_constraintTop_toTopOf="@+id/tv_list" />
+
+    <TextView
+        android:id="@+id/readBuffer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="350dp"
+        android:text="readBuffer"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_bluetooth" />
+
+    <include
+        android:id="@+id/bluetoothStatus"
+        layout="@layout/bottommenu"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </android.support.constraint.ConstraintLayout>
