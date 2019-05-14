@@ -32,17 +32,6 @@ public class data extends AppCompatActivity {
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LOCKED);
 
         menu();
-
-        SharedPreferences sp = getSharedPreferences("sharedprefs", Activity.MODE_PRIVATE);
-        ImageView iv_left = findViewById(R.id.iv_left);
-        ImageView iv_right = findViewById(R.id.iv_right);
-        if ((sp.getString(limb, "Left").equals("Right"))) {
-            iv_left.setVisibility(View.INVISIBLE);
-            iv_right.setVisibility(View.VISIBLE);
-        } else {
-            iv_left.setVisibility(View.VISIBLE);
-            iv_right.setVisibility(View.INVISIBLE);
-        }
     }
 
     protected void menu() {

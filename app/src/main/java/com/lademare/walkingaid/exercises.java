@@ -25,6 +25,7 @@ import android.widget.Toast;
 import android.widget.ToggleButton;
 
 public class exercises extends AppCompatActivity implements SensorEventListener {
+//public class exercises extends AppCompatActivity {
 
     SensorManager sensorManager;
     BluetoothAdapter myBluetoothAdapter;
@@ -39,6 +40,7 @@ public class exercises extends AppCompatActivity implements SensorEventListener 
     public static final String ex_2_status = "ex_2_status";
     public static final String ex_3_status = "ex_3_status";
 
+    public static final String BTinput = "BTinput";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,7 +101,7 @@ public class exercises extends AppCompatActivity implements SensorEventListener 
         } else{ btn_ex_2.setChecked(false);}
         ToggleButton btn_ex_3 = findViewById(R.id.btn_ex_3);
         if (ex_3){
-            btn_ex_1.setChecked(true);
+            btn_ex_3.setChecked(true);
             ex_3 = true;
         } else{ btn_ex_3.setChecked(false);}
     }
@@ -113,8 +115,9 @@ public class exercises extends AppCompatActivity implements SensorEventListener 
                     Toast.makeText(getApplicationContext(),"Exercise 1 stopped",Toast.LENGTH_SHORT).show(); ex_1_start = false;
                 } else {
                     if(!myBluetoothAdapter.isEnabled()) {
-                        Toast.makeText(getApplicationContext(),"Turn on bluetooth",Toast.LENGTH_SHORT).show(); ex_3_start = true;}
+                        Toast.makeText(getApplicationContext(),"Turn on bluetooth",Toast.LENGTH_SHORT).show(); ex_1_start = true;}
                     else {Toast.makeText(getApplicationContext(),"Exercise 1 started",Toast.LENGTH_SHORT).show(); ex_1_start = true;}
+                    //doexercises();
                 }
                 ex_1 = !ex_1;
                 SharedPreferences sp = getSharedPreferences("sharedprefs", Activity.MODE_PRIVATE);
@@ -131,8 +134,9 @@ public class exercises extends AppCompatActivity implements SensorEventListener 
                     Toast.makeText(getApplicationContext(),"Exercise 2 stopped",Toast.LENGTH_SHORT).show(); ex_2_start = false;
                 } else {
                     if(!myBluetoothAdapter.isEnabled()) {
-                        Toast.makeText(getApplicationContext(),"Turn on bluetooth",Toast.LENGTH_SHORT).show(); ex_3_start = true;}
+                        Toast.makeText(getApplicationContext(),"Turn on bluetooth",Toast.LENGTH_SHORT).show(); ex_2_start = true;}
                     else {Toast.makeText(getApplicationContext(),"Exercise 2 started",Toast.LENGTH_SHORT).show(); ex_2_start = true; }
+                    //doexercises();
                 }
                 ex_2 = !ex_2;
                 SharedPreferences sp = getSharedPreferences("sharedprefs", Activity.MODE_PRIVATE);
@@ -151,6 +155,7 @@ public class exercises extends AppCompatActivity implements SensorEventListener 
                     if(!myBluetoothAdapter.isEnabled()) {
                         Toast.makeText(getApplicationContext(),"Turn on bluetooth",Toast.LENGTH_SHORT).show(); ex_3_start = true;}
                     else{ Toast.makeText(getApplicationContext(),"Exercise 3 started",Toast.LENGTH_SHORT).show(); ex_3_start = true;}
+                    //doexercises();
                 }
                 ex_3 = !ex_3;
                 SharedPreferences sp = getSharedPreferences("sharedprefs", Activity.MODE_PRIVATE);
@@ -161,17 +166,39 @@ public class exercises extends AppCompatActivity implements SensorEventListener 
         });
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        running = true;
-        Sensor countSensor = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER);
-        if (countSensor != null) {
-            sensorManager.registerListener(this, countSensor, sensorManager.SENSOR_DELAY_UI);   // look if sensor is available on phone
-        } else {
-            Toast.makeText(this, "Sensor not found", Toast.LENGTH_SHORT).show();   // notice users if there phone doesn't have the sensor
-        }
-    }
+//    protected void doexercises(){
+//        SharedPreferences sp = getSharedPreferences("sharedprefs", Activity.MODE_PRIVATE);
+//        if(ex_2_start){
+//            if ((sp.getString(BTinput, "-").equals("X"))) {
+//                AudioManager audioManager = (AudioManager)getSystemService(Context.AUDIO_SERVICE);
+//                if (audioManager.isWiredHeadsetOn()){
+//                    Toast.makeText(this, "headphone detected", Toast.LENGTH_SHORT).show();
+//                    audioManager.setMode(AudioManager.MODE_IN_CALL);
+//                    audioManager.setSpeakerphoneOn(false);
+//                }
+//                ToneGenerator toneG = new ToneGenerator(AudioManager.STREAM_ALARM, 50);
+//                toneG.startTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD, 100);
+//            }
+//        }
+//        if(ex_3_start){
+//            if ((sp.getString(BTinput, "-").equals("X"))) {
+//                Vibrator vibrator = (Vibrator)getSystemService(Context.VIBRATOR_SERVICE);
+//                vibrator.vibrate(100);
+//            }
+//        }
+//    }
+
+//    @Override
+//    protected void onResume() {
+//        super.onResume();
+//        running = true;
+//        Sensor countSensor = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER);
+//        if (countSensor != null) {
+//            sensorManager.registerListener(this, countSensor, sensorManager.SENSOR_DELAY_UI);   // look if sensor is available on phone
+//        } else {
+//            Toast.makeText(this, "Sensor not found", Toast.LENGTH_SHORT).show();   // notice users if there phone doesn't have the sensor
+//        }
+//    }
 
     @Override
     public void onSensorChanged(SensorEvent event) {

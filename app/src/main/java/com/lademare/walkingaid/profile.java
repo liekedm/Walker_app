@@ -16,13 +16,13 @@ import android.widget.ToggleButton;
 
 public class profile extends AppCompatActivity{
 
-    EditText editWeight;
-    EditText editWeightbearing;
+    EditText editpatientname;
+    EditText edittherapistname;
     EditText editMessege;
 
     public static final String limb = "limb";
-    public static final String weight = "weight";
-    public static final String weightbearing = "weightbearing";
+    public static final String namepatient = "namepatient";
+    public static final String nametherapist = "nametherapist";
     public static final String messege = "messege";
 
     @Override
@@ -33,40 +33,12 @@ public class profile extends AppCompatActivity{
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LOCKED);
 
-        editWeight = findViewById(R.id.editWeight);
-        editWeightbearing = findViewById(R.id.editWeightbearing);
+        editpatientname = findViewById(R.id.editpatientname);
+        edittherapistname = findViewById(R.id.edittherapistname);
         editMessege = findViewById(R.id.editMessege);
 
         menu();
         getdata();
-    }
-
-    protected void menu() {
-        Button btn_exercises = findViewById(R.id.btn_exercises);
-        Button btn_data = findViewById(R.id.btn_data);
-        TextView btn_profile = findViewById(R.id.btn_profile);
-        btn_profile.setTextColor(Color.WHITE);
-        btn_exercises.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(profile.this, exercises.class));
-                editdata();
-            }
-        });
-        btn_data.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(profile.this, data.class));
-                editdata();
-            }
-        });
-        ImageButton btn_bluetooth = findViewById(R.id.btn_bluetooth);
-        btn_bluetooth.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(profile.this, bluetooth.class));
-            }
-        });
     }
 
     protected void getdata() {
@@ -77,8 +49,8 @@ public class profile extends AppCompatActivity{
         } else {
             left_right.setChecked(false);
         }
-        editWeight.setText(String.valueOf(sp.getInt(weight, 80)));
-        editWeightbearing.setText(String.valueOf(sp.getInt(weightbearing, 80)));
+        editpatientname.setText(String.valueOf(sp.getString(namepatient, " ")));
+        edittherapistname.setText(String.valueOf(sp.getString(nametherapist, " ")));
         editMessege.setText(sp.getString(messege, " "));
     }
 
@@ -91,13 +63,42 @@ public class profile extends AppCompatActivity{
         } else {
             editor.putString("limb", "Left");
         }
-        int weight = Integer.parseInt(editWeight.getText().toString());
-        int weightbearing = Integer.parseInt(editWeightbearing.getText().toString());
+        String namepatient = editpatientname.getText().toString();
+        String nametherapist = edittherapistname.getText().toString();
         String messege = editMessege.getText().toString();
-        editor.putInt("weight", weight);
-        editor.putInt("weightbearing", weightbearing);
+        editor.putString("namepatient", namepatient);
+        editor.putString("nametherapist", nametherapist);
         editor.putString("messege", messege);
         editor.apply();
+    }
+
+    protected void menu() {
+        Button btn_exercises = findViewById(R.id.btn_exercises);
+        Button btn_data = findViewById(R.id.btn_data);
+        TextView btn_profile = findViewById(R.id.btn_profile);
+        btn_profile.setTextColor(Color.WHITE);
+        btn_exercises.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                editdata();
+                startActivity(new Intent(profile.this, exercises.class));
+            }
+        });
+        btn_data.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                editdata();
+                startActivity(new Intent(profile.this, data.class));
+            }
+        });
+        ImageButton btn_bluetooth = findViewById(R.id.btn_bluetooth);
+        btn_bluetooth.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                editdata();
+                startActivity(new Intent(profile.this, bluetooth.class));
+            }
+        });
     }
 
 }

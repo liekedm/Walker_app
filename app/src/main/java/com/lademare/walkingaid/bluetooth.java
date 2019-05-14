@@ -4,13 +4,19 @@ package com.lademare.walkingaid;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
+import android.media.AudioManager;
+import android.media.ToneGenerator;
 import android.os.SystemClock;
+import android.os.Vibrator;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -21,6 +27,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -56,8 +63,7 @@ public class bluetooth extends AppCompatActivity {
     private final static int MESSAGE_READ = 2; // used in bluetooth handler to identify message update
     private final static int CONNECTING_STATUS = 3; // used in bluetooth handler to identify message status
 
-    private TextView BluetoothStatus;
-    private TextView ReadBuffer;
+    public static final String BTinput = "BTinput";
 
     @SuppressLint("HandlerLeak")
     @Override
@@ -72,20 +78,27 @@ public class bluetooth extends AppCompatActivity {
         myBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         bluetooth_on_off();
 
-        //BluetoothStatus = findViewById(R.id.bluetoothStatus);
-        //ReadBuffer = findViewById(R.id.readBuffer);
-
         BTHandler = new Handler(){
             public void handleMessage(android.os.Message msg){
                 if(msg.what == MESSAGE_READ){
                     String readMessage = null;
                     try {
                         readMessage = new String((byte[]) msg.obj, "UTF-8");
+//                        SharedPreferences sp = getSharedPreferences("sharedprefs", Activity.MODE_PRIVATE);
+//                        SharedPreferences.Editor editor = sp.edit();
+//                        editor.putString("BTinput", readMessage);
+//                        editor.apply();
+//                        if ((sp.getString(BTinput, "X").equals("X"))) {
+//                            ToneGenerator toneG = new ToneGenerator(AudioManager.STREAM_ALARM, 50);
+//                            toneG.startTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD, 100);
+//                        }
+//                        Vibrator vibrator = (Vibrator)getSystemService(Context.VIBRATOR_SERVICE);
+//                        vibrator.vibrate(100);
                     } catch (UnsupportedEncodingException e) {
                         e.printStackTrace();
                     }
-                    ReadBuffer = findViewById(R.id.readBuffer);
-                    ReadBuffer.setText(readMessage);
+                    TextView ReadBuffer1 = findViewById(R.id.readBuffer1);
+                    ReadBuffer1.setText(readMessage);
                 }
 
                 if(msg.what == CONNECTING_STATUS){
@@ -100,6 +113,14 @@ public class bluetooth extends AppCompatActivity {
                 }
             }
         };
+
+//        SharedPreferences sp = getSharedPreferences("sharedprefs", Activity.MODE_PRIVATE);
+//        if ((sp.getString(BTinput, "X").equals("X"))) {
+//            ToneGenerator toneG = new ToneGenerator(AudioManager.STREAM_ALARM, 50);
+//                toneG.startTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD, 100);
+//                Vibrator vibrator = (Vibrator)getSystemService(Context.VIBRATOR_SERVICE);
+//                vibrator.vibrate(100);
+//        }
     }
 
     protected void bluetooth_on_off() {
@@ -109,16 +130,16 @@ public class bluetooth extends AppCompatActivity {
         if (myBluetoothAdapter.isEnabled()){
             btn_btstate.setChecked(true);
             bluetooth_list();
-            TextView ReadBuffer = findViewById(R.id.readBuffer);
-            ReadBuffer.setVisibility(View.VISIBLE);
+            TextView ReadBuffer1 = findViewById(R.id.readBuffer1);
+            ReadBuffer1.setVisibility(View.VISIBLE);
             TextView connect = findViewById(R.id.connected);
             connect.setVisibility(View.VISIBLE);
         } else {
             btn_btstate.setChecked(false);
             TextView tv_list = findViewById(R.id.tv_list);
             tv_list.setVisibility(View.INVISIBLE);
-            TextView ReadBuffer = findViewById(R.id.readBuffer);
-            ReadBuffer.setVisibility(View.INVISIBLE);
+            TextView ReadBuffer1 = findViewById(R.id.readBuffer1);
+            ReadBuffer1.setVisibility(View.INVISIBLE);
             TextView connect = findViewById(R.id.connected);
             connect.setVisibility(View.INVISIBLE);
         }
@@ -138,8 +159,8 @@ public class bluetooth extends AppCompatActivity {
                     ListView lv_bt = findViewById(R.id.lv_bt);
                     tv_list.setVisibility(View.INVISIBLE);
                     lv_bt.setVisibility(View.INVISIBLE);
-                    TextView ReadBuffer = findViewById(R.id.readBuffer);
-                    ReadBuffer.setVisibility(View.INVISIBLE);
+                    TextView ReadBuffer1 = findViewById(R.id.readBuffer1);
+                    ReadBuffer1.setVisibility(View.INVISIBLE);
                     TextView connect = findViewById(R.id.connected);
                     connect.setVisibility(View.INVISIBLE);
                 }
@@ -177,8 +198,8 @@ public class bluetooth extends AppCompatActivity {
         TextView tv_list = findViewById(R.id.tv_list);
         lv_bt.setVisibility(View.VISIBLE);
         tv_list.setVisibility(View.VISIBLE);
-       TextView ReadBuffer = findViewById(R.id.readBuffer);
-       ReadBuffer.setVisibility(View.VISIBLE);
+       TextView ReadBuffer1 = findViewById(R.id.readBuffer1);
+       ReadBuffer1.setVisibility(View.VISIBLE);
        TextView connect = findViewById(R.id.connected);
        connect.setVisibility(View.VISIBLE);
 
@@ -273,7 +294,7 @@ public class bluetooth extends AppCompatActivity {
                     bytes = mmInStream.available();
                     if(bytes != 0) {
                         buffer = new byte[1024];
-                        SystemClock.sleep(1); //pause and wait for rest of data. Adjust this depending on your sending speed.
+                        SystemClock.sleep(10); //pause and wait for rest of data. Adjust this depending on your sending speed.
                         bytes = mmInStream.available(); // how many bytes are ready to be read?
                         bytes = mmInStream.read(buffer, 0, bytes); // record how many bytes we actually read
                         BTHandler.obtainMessage(MESSAGE_READ, bytes, -1, buffer)

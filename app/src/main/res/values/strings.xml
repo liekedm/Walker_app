@@ -24,15 +24,15 @@
     <string name="empty">  </string>
 
     <!-- Data -->
-    <string name="weightbearinglimb">Weightbearing in effected limb</string>
-    <string name="weightbearingaverage">Average weightbaring</string>
-    <string name="weightbearinglive">Live measurement</string>
+    <string name="Cadence">Cadence</string>
+    <string name="Walkinggait">Used gait method</string>
+    <string name="Cadencedata">90 steps per minute</string>
+    <string name="gaitdata">3-points gait</string>
 
     <!-- Profile -->
     <string name="limb">Effected Limb</string>
-    <string name="weight">Weight</string>
-    <string name="weightinfo">Used to determine weight bearing</string>
-    <string name="weightbaring">Maximum weight bearing</string>
+    <string name="namepatients">Name patient</string>
+    <string name="nametherapist">Name therapist</string>
     <string name="messege">Messege from therapist</string>
     <string name="left">Left</string>
     <string name="right">Right</string>
