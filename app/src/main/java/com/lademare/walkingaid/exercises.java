@@ -101,28 +101,14 @@ public class exercises extends AppCompatActivity implements SensorEventListener 
                     String readMessage = " ";
                     try {
                         readMessage = new String((byte[]) msg.obj, "UTF-8");
-                        BTHandler.obtainMessage(msg.what, msg.obj).sendToTarget();
-                        inputdata1 = readMessage;
-                        challenges();
                     } catch (UnsupportedEncodingException e) {
                         e.printStackTrace();
                     }
                     TextView input1 = findViewById(R.id.input1);
                     input1.setText(readMessage);
-                    if (readMessage.equals("foot")){
-                        Vibrator vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
-                        vibrator.vibrate(100);
-                    }
                 }
             }
         };
-    }
-
-    protected void challenges(){
-        if (inputdata1 == "foot"){
-            Vibrator vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
-            vibrator.vibrate(100);
-        }
     }
 
     protected void menu() {
@@ -273,8 +259,8 @@ public class exercises extends AppCompatActivity implements SensorEventListener 
     /* code to enable bluetooth */
 
 
-    //String address1 = ("98:D3:41:FD:3D:B6");
-    String address1 = ("98:D3:81:FD:4B:87");
+    String address1 = ("98:D3:41:FD:3D:B6");
+    //String address1 = ("98:D3:81:FD:4B:87");
     String name1 = ("Sensor_Shoe");
 
     @SuppressLint("HandlerLeak")
