@@ -1,5 +1,7 @@
 package com.lademare.walkingaid;
 
+/*  bluetooth code using tutorial: Android Bluetooth Connectivity Tutorial - Sarthi Technology and example: Simple Android Bluetooth Application with Arduino Example - justin bauer*/
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
@@ -37,9 +39,14 @@ import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Method;
 import java.util.UUID;
 import android.os.Handler;
+import android.annotation.SuppressLint;
+import android.bluetooth.BluetoothSocket;
+import android.os.SystemClock;
+import android.support.annotation.Nullable;
+import java.io.IOException;
+import java.io.InputStream;
 
 public class exercises extends AppCompatActivity implements SensorEventListener {
-//public class exercises extends AppCompatActivity {
 
     SensorManager sensorManager;
     boolean running = false;
@@ -61,13 +68,14 @@ public class exercises extends AppCompatActivity implements SensorEventListener 
     private Handler BTHandler;
     Intent btEnablingIntent;
     int requestCodeForEnable;
-    public String readMessage;
+    //public String readMessage;
     private final static int MESSAGE_READ = 2; // used in bluetooth handler to identify message update
     private final static int CONNECTING_STATUS = 3; // used in bluetooth handler to identify message status
-    public static final String BTinput = "BTinput";
 
-    String inputdata1;
-    String foot = "foot";
+    String inputdata1 = " ";
+    String readMessage = " ";
+    String result;
+    boolean newdata = false;
 
     @SuppressLint("HandlerLeak")
     @Override
@@ -98,9 +106,10 @@ public class exercises extends AppCompatActivity implements SensorEventListener 
         BTHandler = new Handler() {
             public void handleMessage(android.os.Message msg) {
                 if (msg.what == MESSAGE_READ) {
-                    String readMessage = " ";
                     try {
-                        readMessage = new String((byte[]) msg.obj, "UTF-8");
+                        readMessage = new String((byte[]) msg.obj, "US-ASCII");
+                        //Log.i("incomming data", readMessage);
+                        practice();
                     } catch (UnsupportedEncodingException e) {
                         e.printStackTrace();
                     }
@@ -109,6 +118,26 @@ public class exercises extends AppCompatActivity implements SensorEventListener 
                 }
             }
         };
+    }
+
+    protected void practice() {
+        if ((!(inputdata1.equals(readMessage)))&&(newdata)){
+            ToneGenerator toneG = new ToneGenerator(AudioManager.STREAM_ALARM, 100);
+            toneG.startTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD, 100);
+            newdata = false;
+            result = "heel-strike";
+//            final Handler handler = new Handler();
+//            handler.postDelayed(new Runnable() {
+//                @Override
+//                public void run() {
+//                    newdata = true;
+//                }
+//            }, 1000);
+        }  else {
+            newdata = true;
+            result = " ";
+        }
+        inputdata1 = readMessage;
     }
 
     protected void menu() {
@@ -239,7 +268,7 @@ public class exercises extends AppCompatActivity implements SensorEventListener 
                     audioManager.setMode(AudioManager.MODE_IN_CALL);
                     audioManager.setSpeakerphoneOn(false);
                 }
-                ToneGenerator toneG = new ToneGenerator(AudioManager.STREAM_ALARM, 50);
+                ToneGenerator toneG = new ToneGenerator(AudioManager.STREAM_ALARM, 100);
                 toneG.startTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD, 100);
             }
             if(ex_3_start){
@@ -257,7 +286,6 @@ public class exercises extends AppCompatActivity implements SensorEventListener 
 
 
     /* code to enable bluetooth */
-
 
     String address1 = ("98:D3:41:FD:3D:B6");
     //String address1 = ("98:D3:81:FD:4B:87");
@@ -372,7 +400,7 @@ public class exercises extends AppCompatActivity implements SensorEventListener 
                     bytes = mmInStream.available();
                     if(bytes != 0) {
                         buffer = new byte[1024];
-                        SystemClock.sleep(100); //pause and wait for rest of data. Adjust this depending on your sending speed.
+                        //SystemClock.sleep(50); //pause and wait for rest of data. Adjust this depending on your sending speed.
                         bytes = mmInStream.available(); // how many bytes are ready to be read?
                         bytes = mmInStream.read(buffer, 0, bytes); // record how many bytes we actually read
                         BTHandler.obtainMessage(MESSAGE_READ, bytes, -1, buffer)
