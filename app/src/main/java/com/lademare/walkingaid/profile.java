@@ -91,14 +91,6 @@ public class profile extends AppCompatActivity{
                 startActivity(new Intent(profile.this, data.class));
             }
         });
-        ImageButton btn_bluetooth = findViewById(R.id.btn_bluetooth);
-        btn_bluetooth.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                editdata();
-                startActivity(new Intent(profile.this, bluetooth.class));
-            }
-        });
     }
 
 }

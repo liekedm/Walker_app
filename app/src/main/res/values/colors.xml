@@ -5,4 +5,5 @@
     <color name="colorAccent">#D81B60</color>
     <color name="colorText">#757575</color>
     <color name="colorMenutext">#CBE2E0</color>
+    <color name="transparent">#00CBE2E0</color>
 </resources>

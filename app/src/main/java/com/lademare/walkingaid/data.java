@@ -51,12 +51,5 @@ public class data extends AppCompatActivity {
                 startActivity(new Intent(data.this, profile.class));
             }
         });
-        ImageButton btn_bluetooth = findViewById(R.id.btn_bluetooth);
-        btn_bluetooth.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(data.this, bluetooth.class));
-            }
-        });
     }
 }

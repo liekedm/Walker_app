@@ -165,4 +165,27 @@
         app:layout_constraintEnd_toEndOf="@+id/iv_bg_exercise3"
         app:layout_constraintTop_toTopOf="@+id/iv_bg_exercise3" />
 
+    <TextView
+        android:id="@+id/input1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="24dp"
+        android:text="input1"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/iv_bg_exercise3" />
+
+    <ImageButton
+        android:id="@+id/btn_bluetooth"
+        style="@android:style/Widget.Holo.ImageButton"
+        android:layout_width="40dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="8dp"
+        android:background="@null"
+        android:scaleType="centerInside"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/bluetooth" />
+
 </android.support.constraint.ConstraintLayout>
