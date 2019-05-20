@@ -70,7 +70,10 @@ public class exercises extends AppCompatActivity {
     int old_average = 10;
     int new_average;
     int timer = 0;
-    boolean rhythm;
+    boolean rhythmconsistent;
+    int offrhythm = 0;
+    int offrhythmtimer = 30;
+    int feedbacktimer = 10;
 
 
 
@@ -132,28 +135,45 @@ public class exercises extends AppCompatActivity {
             if (ex_time > 30){ // start measuring after certain time to allow the user to store the phone away first
                 timebetweensteps ++;
                 if (result.equals("heel-strike")){
-                    new_measurement = timebetweensteps;
+                    if ((timebetweensteps/old_average)>2 || (timebetweensteps/old_average)<0.4){ // don't take outliers into account, can be caused by extern source
+                        new_measurement = old_average;
+                    } else {
+                        new_measurement = timebetweensteps;
+                    }
                     timebetweensteps = 0;
                     new_average = ((9*old_average+new_measurement)/10); // approximate average, last measurements have most impact
                     old_average = new_average;
                 }
-                if ((((new_measurement/old_average)*100)>90)&&(((new_measurement/old_average)*100)<110)){ // check if the new step is in rhythm or not
-                    rhythm = true;
-                } else {
-                    rhythm = false;
-                }
             }
             if (ex_time > 60) { // give feedback after some data is collected to have some valid input
+                offrhythmtimer--;
+                if (((new_measurement/old_average)<0.9)||((new_measurement/old_average)>1.1)&&(result.equals("heel-strike"))){ // check if the new step is in rhythm or not
+                    offrhythmtimer = 30; // check is there are multible steps not in rhythm in a certain amount of time
+                    offrhythm = offrhythm + 1;
+                }
+                if (offrhythmtimer <= 0){
+                    offrhythm = 0;
+                    offrhythmtimer = 30;
+                }
+                if (offrhythm >= 3){
+                    rhythmconsistent = false;
+                }
                 timer++;
                 if (timer >= new_average) { // make sounds in rhythm of average
                     timer = 0;
-                    if ((ex_time < 120) || (!rhythm)) { // give feedback in the beginning and when the rhythm is not constant
-                        if (ex_1_start) {
-                            ToneGenerator toneG = new ToneGenerator(AudioManager.STREAM_ALARM, 100);
-                            toneG.startTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD, 100);
+                    if ((ex_time < 120) || (!rhythmconsistent)) { // give input in the beginning and when the rhythm is not constant
+                        feedbacktimer--; // give input at least 10 times to get back in rhythm
+                        if (feedbacktimer == 0){
+                            feedbacktimer = 10;
+                            rhythmconsistent = true;
                         }
                         if (ex_1_start) {
-                            final MediaPlayer foot = MediaPlayer.create(this, R.raw.sound);
+                            ToneGenerator toneG = new ToneGenerator(AudioManager.STREAM_ALARM, 50);
+                            toneG.startTone(ToneGenerator.TONE_CDMA_DIAL_TONE_LITE, 100); // TONE_CDMA_ABBR_INTERCEPT : soft not to high or low
+                        }
+                        if (ex_2_start) {
+                            final MediaPlayer foot = MediaPlayer.create(this, R.raw.foot);
+                            foot.start();
                         }
                         if (ex_3_start){
                             Vibrator vibrator = (Vibrator)getSystemService(Context.VIBRATOR_SERVICE);
@@ -164,9 +184,12 @@ public class exercises extends AppCompatActivity {
             }
         }
 
-        TextView tvtimer = findViewById(R.id.timer); tvtimer.setText(String.valueOf(timer)); // used to check values
-        TextView average = findViewById(R.id.average); average.setText(String.valueOf(new_average));
-        TextView extime = findViewById(R.id.extime); extime.setText(String.valueOf(ex_time));
+        TextView tvtimer = findViewById(R.id.tvtimer); tvtimer.setText(String.valueOf(timer)); // used to check values
+        TextView tvaverage = findViewById(R.id.tvaverage); tvaverage.setText(String.valueOf(new_average));
+        TextView tvex_time = findViewById(R.id.tvex_time); tvex_time.setText(String.valueOf(ex_time));
+        TextView tvoffrhytmtimer = findViewById(R.id.tvoffrhythmtimer); tvoffrhytmtimer.setText(String.valueOf(offrhythmtimer));
+        TextView tvoffrhytm = findViewById(R.id.tvoffrhythm); tvoffrhytm.setText(String.valueOf(offrhythm));
+        TextView tvfeedbacktimer = findViewById(R.id.tvfeedbacktimer); tvfeedbacktimer.setText(String.valueOf(feedbacktimer));
     }
 
     protected void menu() {

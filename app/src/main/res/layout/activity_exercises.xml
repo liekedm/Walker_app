@@ -36,9 +36,8 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
-        android:text="@string/exercise1"
-        android:textColor="@color/colorAccent"
-        android:textStyle="bold"
+        android:text="@string/infoexercise"
+        android:textColor="@color/colorText"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/iv_bg_exercise1" />
 
@@ -49,8 +48,8 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
         android:text="@string/infoexercise1"
-        android:textColor="@color/colorText"
-        android:textSize="12sp"
+        android:textColor="@color/colorAccent"
+        android:textSize="18sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_name" />
 
@@ -85,9 +84,8 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
-        android:text="@string/exercise2"
-        android:textColor="@color/colorAccent"
-        android:textStyle="bold"
+        android:text="@string/infoexercise"
+        android:textColor="@color/colorText"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/iv_bg_exercise2" />
 
@@ -98,8 +96,8 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
         android:text="@string/infoexercise2"
-        android:textColor="@color/colorText"
-        android:textSize="12sp"
+        android:textColor="@color/colorAccent"
+        android:textSize="18sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_exercise2" />
 
@@ -135,9 +133,8 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
-        android:text="@string/exercise3"
-        android:textColor="@color/colorAccent"
-        android:textStyle="bold"
+        android:text="@string/infoexercise"
+        android:textColor="@color/colorText"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/iv_bg_exercise3" />
 
@@ -148,8 +145,8 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
         android:text="@string/infoexercise3"
-        android:textColor="@color/colorText"
-        android:textSize="12sp"
+        android:textColor="@color/colorAccent"
+        android:textSize="18sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_exercise3" />
 
@@ -189,7 +186,7 @@
         app:srcCompat="@drawable/bluetooth" />
 
     <TextView
-        android:id="@+id/average"
+        android:id="@+id/tvaverage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
@@ -199,23 +196,52 @@
         app:layout_constraintTop_toBottomOf="@+id/iv_bg_exercise3" />
 
     <TextView
-        android:id="@+id/timer"
+        android:id="@+id/tvtimer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
         android:layout_marginTop="24dp"
         android:text="timer"
-        app:layout_constraintStart_toEndOf="@+id/average"
+        app:layout_constraintStart_toEndOf="@+id/tvaverage"
         app:layout_constraintTop_toBottomOf="@+id/iv_bg_exercise3" />
 
     <TextView
-        android:id="@+id/extime"
+        android:id="@+id/tvex_time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
         android:layout_marginTop="24dp"
         android:text="extime"
-        app:layout_constraintStart_toEndOf="@+id/timer"
+        app:layout_constraintStart_toEndOf="@+id/tvtimer"
         app:layout_constraintTop_toBottomOf="@+id/iv_bg_exercise3" />
+
+    <TextView
+        android:id="@+id/tvoffrhythmtimer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:text="offrhythmtimer"
+        app:layout_constraintStart_toStartOf="@+id/tvaverage"
+        app:layout_constraintTop_toBottomOf="@+id/tvaverage" />
+
+    <TextView
+        android:id="@+id/tvoffrhythm"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="24dp"
+        android:text="offrhythm"
+        app:layout_constraintStart_toEndOf="@+id/tvoffrhythmtimer"
+        app:layout_constraintTop_toBottomOf="@+id/tvex_time" />
+
+    <TextView
+        android:id="@+id/tvfeedbacktimer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="24dp"
+        android:text="feedbacktimer"
+        app:layout_constraintStart_toEndOf="@+id/tvoffrhythm"
+        app:layout_constraintTop_toBottomOf="@+id/tvex_time" />
 
 </android.support.constraint.ConstraintLayout>

@@ -16,24 +16,25 @@
 
     <!-- Exercises -->
     <string name="exercise1">Exersice 1</string>
-    <string name="infoexercise1">Walk on your personal rhythm - Stick Foot</string>
     <string name="exercise2">Exersice 2</string>
-    <string name="infoexercise2">Walk on your personal rhythm - Tones</string>
     <string name="exercise3">Exersice 3</string>
-    <string name="infoexercise3">Change my rhythm to 2-gait</string>
+    <string name="infoexercise">Walk on your personal rhythm</string>
+    <string name="infoexercise1">Tones</string>
+    <string name="infoexercise2">Voice</string>
+    <string name="infoexercise3">Vibrations</string>
     <string name="empty">  </string>
 
     <!-- Data -->
-    <string name="Cadence">Cadence</string>
     <string name="Walkinggait">Used gait method</string>
-    <string name="Cadencedata">90 steps per minute</string>
     <string name="gaitdata">3-points gait</string>
 
     <!-- Profile -->
     <string name="limb">Effected Limb</string>
-    <string name="namepatients">Name patient</string>
+    <string name="walkingaid">Walking-aid</string>
     <string name="nametherapist">Name therapist</string>
     <string name="messege">Messege from therapist</string>
     <string name="left">Left</string>
     <string name="right">Right</string>
+    <string name="crutch">Crutch</string>
+    <string name="stick">Stick</string>
 </resources>

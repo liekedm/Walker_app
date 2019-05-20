@@ -16,12 +16,11 @@ import android.widget.ToggleButton;
 
 public class profile extends AppCompatActivity{
 
-    EditText editpatientname;
     EditText edittherapistname;
     EditText editMessege;
 
     public static final String limb = "limb";
-    public static final String namepatient = "namepatient";
+    public static final String walkingaid = "walkingaid";
     public static final String nametherapist = "nametherapist";
     public static final String messege = "messege";
 
@@ -33,7 +32,6 @@ public class profile extends AppCompatActivity{
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LOCKED);
 
-        editpatientname = findViewById(R.id.editpatientname);
         edittherapistname = findViewById(R.id.edittherapistname);
         editMessege = findViewById(R.id.editMessege);
 
@@ -49,7 +47,12 @@ public class profile extends AppCompatActivity{
         } else {
             left_right.setChecked(false);
         }
-        editpatientname.setText(String.valueOf(sp.getString(namepatient, " ")));
+        ToggleButton crutch_stick = findViewById(R.id.crutch_stick);
+        if ((sp.getString(walkingaid, "Crutch").equals("Stick"))) {
+            crutch_stick.setChecked(true);
+        } else {
+            crutch_stick.setChecked(false);
+        }
         edittherapistname.setText(String.valueOf(sp.getString(nametherapist, " ")));
         editMessege.setText(sp.getString(messege, " "));
     }
@@ -63,10 +66,14 @@ public class profile extends AppCompatActivity{
         } else {
             editor.putString("limb", "Left");
         }
-        String namepatient = editpatientname.getText().toString();
+        ToggleButton crutch_stick = findViewById(R.id.crutch_stick);
+        if (crutch_stick.isChecked()) {
+            editor.putString("walkingaid", "Stick");
+        } else {
+            editor.putString("walkingaid", "Crutch");
+        }
         String nametherapist = edittherapistname.getText().toString();
         String messege = editMessege.getText().toString();
-        editor.putString("namepatient", namepatient);
         editor.putString("nametherapist", nametherapist);
         editor.putString("messege", messege);
         editor.apply();
