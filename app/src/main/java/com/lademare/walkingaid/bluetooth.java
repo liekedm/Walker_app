@@ -1,6 +1,9 @@
 //package com.lademare.walkingaid;
 //
-////bluetooth using tutorial: Android Bluetooth Connectivity Tutorial - Sarthi Technology
+////bluetooth if (ex_1_start){
+//                            ToneGenerator toneGsoft = new ToneGenerator(AudioManager.STREAM_ALARM, 10);
+//                            toneGsoft.startTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD, 100);
+//                        }
 //
 //import android.Manifest;
 //import android.annotation.SuppressLint;

@@ -12,11 +12,9 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.graphics.Color;
-import android.hardware.Sensor;
-import android.hardware.SensorEvent;
-import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.media.AudioManager;
+import android.media.MediaPlayer;
 import android.media.ToneGenerator;
 import android.os.Bundle;
 import android.os.SystemClock;
@@ -27,36 +25,26 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
-import android.os.Bundle;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Method;
 import java.util.UUID;
 import android.os.Handler;
-import android.annotation.SuppressLint;
-import android.bluetooth.BluetoothSocket;
-import android.os.SystemClock;
-import android.support.annotation.Nullable;
-import java.io.IOException;
-import java.io.InputStream;
 
-public class exercises extends AppCompatActivity implements SensorEventListener {
+public class exercises extends AppCompatActivity {
 
     SensorManager sensorManager;
-    boolean running = false;
     boolean ex_1;
     boolean ex_2;
     boolean ex_3;
     boolean ex_1_start = false;
     boolean ex_2_start = false;
     boolean ex_3_start = false;
-    public static final String ex_1_status = "ex_1_status";
+    public static final String ex_1_status = "ex_1_status"; // status is saved in shared preferences to be able to switch activities
     public static final String ex_2_status = "ex_2_status";
     public static final String ex_3_status = "ex_3_status";
 
@@ -68,7 +56,6 @@ public class exercises extends AppCompatActivity implements SensorEventListener 
     private Handler BTHandler;
     Intent btEnablingIntent;
     int requestCodeForEnable;
-    //public String readMessage;
     private final static int MESSAGE_READ = 2; // used in bluetooth handler to identify message update
     private final static int CONNECTING_STATUS = 3; // used in bluetooth handler to identify message status
 
@@ -76,6 +63,16 @@ public class exercises extends AppCompatActivity implements SensorEventListener 
     String readMessage = " ";
     String result;
     boolean newdata = false;
+
+    int ex_time = 0;
+    int timebetweensteps = 0;
+    int new_measurement = 0;
+    int old_average = 10;
+    int new_average;
+    int timer = 0;
+    boolean rhythm;
+
+
 
     @SuppressLint("HandlerLeak")
     @Override
@@ -98,6 +95,7 @@ public class exercises extends AppCompatActivity implements SensorEventListener 
         if (myBluetoothAdapter.isEnabled()){
             btn_bluetooth.setBackgroundColor(getResources().getColor(R.color.colorAccent));
             input1.setVisibility(View.VISIBLE);
+            createsocket(); // connect to device if bluetooth is already on
         } else {
             btn_bluetooth.setBackgroundColor(getResources().getColor(R.color.transparent));
             findViewById(R.id.input1); input1.setVisibility(View.INVISIBLE);
@@ -108,7 +106,6 @@ public class exercises extends AppCompatActivity implements SensorEventListener 
                 if (msg.what == MESSAGE_READ) {
                     try {
                         readMessage = new String((byte[]) msg.obj, "US-ASCII");
-                        //Log.i("incomming data", readMessage);
                         practice();
                     } catch (UnsupportedEncodingException e) {
                         e.printStackTrace();
@@ -121,23 +118,55 @@ public class exercises extends AppCompatActivity implements SensorEventListener 
     }
 
     protected void practice() {
-        if ((!(inputdata1.equals(readMessage)))&&(newdata)){
-            ToneGenerator toneG = new ToneGenerator(AudioManager.STREAM_ALARM, 100);
-            toneG.startTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD, 100);
-            newdata = false;
+        if ((!(inputdata1.equals(readMessage)))&&(newdata)){ // while recognizing the incomming data didn't work, check if the data changes
+            newdata = false; // while the data changes 2, from nothing to heel-strike and back, only count the first
             result = "heel-strike";
-//            final Handler handler = new Handler();
-//            handler.postDelayed(new Runnable() {
-//                @Override
-//                public void run() {
-//                    newdata = true;
-//                }
-//            }, 1000);
         }  else {
             newdata = true;
             result = " ";
         }
         inputdata1 = readMessage;
+
+        if (ex_1_start||ex_2_start||ex_3_start){
+            ex_time++; // timer to see how long the exercise is been going to determine fase
+            if (ex_time > 30){ // start measuring after certain time to allow the user to store the phone away first
+                timebetweensteps ++;
+                if (result.equals("heel-strike")){
+                    new_measurement = timebetweensteps;
+                    timebetweensteps = 0;
+                    new_average = ((9*old_average+new_measurement)/10); // approximate average, last measurements have most impact
+                    old_average = new_average;
+                }
+                if ((((new_measurement/old_average)*100)>90)&&(((new_measurement/old_average)*100)<110)){ // check if the new step is in rhythm or not
+                    rhythm = true;
+                } else {
+                    rhythm = false;
+                }
+            }
+            if (ex_time > 60) { // give feedback after some data is collected to have some valid input
+                timer++;
+                if (timer >= new_average) { // make sounds in rhythm of average
+                    timer = 0;
+                    if ((ex_time < 120) || (!rhythm)) { // give feedback in the beginning and when the rhythm is not constant
+                        if (ex_1_start) {
+                            ToneGenerator toneG = new ToneGenerator(AudioManager.STREAM_ALARM, 100);
+                            toneG.startTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD, 100);
+                        }
+                        if (ex_1_start) {
+                            final MediaPlayer foot = MediaPlayer.create(this, R.raw.sound);
+                        }
+                        if (ex_3_start){
+                            Vibrator vibrator = (Vibrator)getSystemService(Context.VIBRATOR_SERVICE);
+                            vibrator.vibrate(100);
+                        }
+                    }
+                }
+            }
+        }
+
+        TextView tvtimer = findViewById(R.id.timer); tvtimer.setText(String.valueOf(timer)); // used to check values
+        TextView average = findViewById(R.id.average); average.setText(String.valueOf(new_average));
+        TextView extime = findViewById(R.id.extime); extime.setText(String.valueOf(ex_time));
     }
 
     protected void menu() {
@@ -162,7 +191,6 @@ public class exercises extends AppCompatActivity implements SensorEventListener 
             @Override
             public void onClick(View view) {
                 bluetoothconnect();
-                //startActivity(new Intent(exercises.this, bluetooth.class));
             }
         });
     }
@@ -196,10 +224,11 @@ public class exercises extends AppCompatActivity implements SensorEventListener 
             public void onClick(View view) {
                 if (ex_1) {
                     Toast.makeText(getApplicationContext(),"Exercise 1 stopped",Toast.LENGTH_SHORT).show(); ex_1_start = false;
+                    ex_time = 0; timebetweensteps = 0; new_measurement = 0; old_average = 10; timer = 0; // reset values
                 } else {
                     if(!myBluetoothAdapter.isEnabled()) {
                         Toast.makeText(getApplicationContext(),"Turn on bluetooth",Toast.LENGTH_SHORT).show(); ex_1_start = true;}
-                    else {Toast.makeText(getApplicationContext(),"Exercise 1 starts in 30 seconds",Toast.LENGTH_SHORT).show(); ex_1_start = true;}
+                    else {Toast.makeText(getApplicationContext(),"Exercise 1 starts in 1 minute",Toast.LENGTH_SHORT).show(); ex_1_start = true;}
                 }
                 ex_1 = !ex_1;
                 SharedPreferences sp = getSharedPreferences("sharedprefs", Activity.MODE_PRIVATE);
@@ -214,10 +243,11 @@ public class exercises extends AppCompatActivity implements SensorEventListener 
             public void onClick(View view) {
                 if (ex_2) {
                     Toast.makeText(getApplicationContext(),"Exercise 2 stopped",Toast.LENGTH_SHORT).show(); ex_2_start = false;
+                    ex_time = 0; timebetweensteps = 0; new_measurement = 0; old_average = 10; timer = 0;
                 } else {
                     if(!myBluetoothAdapter.isEnabled()) {
                         Toast.makeText(getApplicationContext(),"Turn on bluetooth",Toast.LENGTH_SHORT).show(); ex_2_start = true;}
-                    else {Toast.makeText(getApplicationContext(),"Exercise 2 starts in 30 seconds",Toast.LENGTH_SHORT).show(); ex_2_start = true; }
+                    else {Toast.makeText(getApplicationContext(),"Exercise 2 starts in 1 minute",Toast.LENGTH_SHORT).show(); ex_2_start = true; }
                 }
                 ex_2 = !ex_2;
                 SharedPreferences sp = getSharedPreferences("sharedprefs", Activity.MODE_PRIVATE);
@@ -232,10 +262,11 @@ public class exercises extends AppCompatActivity implements SensorEventListener 
             public void onClick(View view) {
                 if (ex_3) {
                     Toast.makeText(getApplicationContext(),"Exercise 3 stopped",Toast.LENGTH_SHORT).show(); ex_3_start = false;
+                    ex_time = 0; timebetweensteps = 0; new_measurement = 0; old_average = 10; timer = 0;
                 } else {
                     if(!myBluetoothAdapter.isEnabled()) {
                         Toast.makeText(getApplicationContext(),"Turn on bluetooth",Toast.LENGTH_SHORT).show(); ex_3_start = true;}
-                    else{ Toast.makeText(getApplicationContext(),"Exercise 3 starts in 30 seconds",Toast.LENGTH_SHORT).show(); ex_3_start = true;}
+                    else{ Toast.makeText(getApplicationContext(),"Exercise 3 starts in 1 minute",Toast.LENGTH_SHORT).show(); ex_3_start = true;}
                 }
                 ex_3 = !ex_3;
                 SharedPreferences sp = getSharedPreferences("sharedprefs", Activity.MODE_PRIVATE);
@@ -244,42 +275,6 @@ public class exercises extends AppCompatActivity implements SensorEventListener 
                 editor.apply();
             }
         });
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        running = true;
-        Sensor countSensor = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER);
-        if (countSensor != null) {
-            sensorManager.registerListener(this, countSensor, sensorManager.SENSOR_DELAY_UI);   // look if sensor is available on phone
-        } else {
-            Toast.makeText(this, "Sensor not found", Toast.LENGTH_SHORT).show();   // notice users if there phone doesn't have the sensor
-        }
-    }
-
-    @Override
-    public void onSensorChanged(SensorEvent event) {
-        if (running) {
-            if(ex_2_start){
-                AudioManager audioManager = (AudioManager)getSystemService(Context.AUDIO_SERVICE);
-                if (audioManager.isWiredHeadsetOn()){
-                    Toast.makeText(this, "headphone detected", Toast.LENGTH_SHORT).show();
-                    audioManager.setMode(AudioManager.MODE_IN_CALL);
-                    audioManager.setSpeakerphoneOn(false);
-                }
-                ToneGenerator toneG = new ToneGenerator(AudioManager.STREAM_ALARM, 100);
-                toneG.startTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD, 100);
-            }
-            if(ex_3_start){
-                Vibrator vibrator = (Vibrator)getSystemService(Context.VIBRATOR_SERVICE);
-                vibrator.vibrate(100);
-            }
-        }
-    }
-
-    @Override
-    public void onAccuracyChanged(Sensor sensor, int accuracy) {
     }
 
 
