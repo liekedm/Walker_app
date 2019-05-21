@@ -10,29 +10,26 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
-public class profile extends AppCompatActivity{
+public class profilept1 extends AppCompatActivity{
 
     EditText edittherapistname;
     EditText editMessege;
 
     public static final String limb = "limb";
     public static final String walkingaid = "walkingaid";
-    public static final String nametherapist = "nametherapist";
     public static final String messege = "messege";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         overridePendingTransition(0,0);
-        setContentView(R.layout.activity_profile);
+        setContentView(R.layout.activity_profile_pt1);
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LOCKED);
 
-        edittherapistname = findViewById(R.id.edittherapistname);
         editMessege = findViewById(R.id.editMessege);
 
         menu();
@@ -53,7 +50,6 @@ public class profile extends AppCompatActivity{
         } else {
             crutch_stick.setChecked(false);
         }
-        edittherapistname.setText(String.valueOf(sp.getString(nametherapist, " ")));
         editMessege.setText(sp.getString(messege, " "));
     }
 
@@ -72,9 +68,7 @@ public class profile extends AppCompatActivity{
         } else {
             editor.putString("walkingaid", "Crutch");
         }
-        String nametherapist = edittherapistname.getText().toString();
         String messege = editMessege.getText().toString();
-        editor.putString("nametherapist", nametherapist);
         editor.putString("messege", messege);
         editor.apply();
     }
@@ -88,14 +82,14 @@ public class profile extends AppCompatActivity{
             @Override
             public void onClick(View view) {
                 editdata();
-                startActivity(new Intent(profile.this, exercises.class));
+                startActivity(new Intent(profilept1.this, exercisespt1.class));
             }
         });
         btn_data.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 editdata();
-                startActivity(new Intent(profile.this, data.class));
+                startActivity(new Intent(profilept1.this, datapt1.class));
             }
         });
     }

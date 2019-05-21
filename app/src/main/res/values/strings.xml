@@ -8,6 +8,11 @@
     <string name="on">ON</string>
     <string name="off">OFF</string>
 
+    <!-- Login -->
+    <string name="login">login</string>
+    <string name="name">Name</string>
+    <string name="Password">Password</string>
+
     <!-- Bluetooth -->
     <string name="bluetooth">Bluetooth</string>
     <string name="list">Paired devices</string>

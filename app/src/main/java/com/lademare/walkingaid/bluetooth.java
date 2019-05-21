@@ -59,8 +59,8 @@
 //    boolean stopThread;
 //    private final String TAG = bluetooth.class.getSimpleName();
 //    private Handler BTHandler;
-//    private ConnectedThread mConnectedThread; // bluetooth background worker thread to send and receive data
-//    private BluetoothSocket BTSocket = null; // bi-directional client-to-client data path
+//    private ConnectedThread mConnectedThread; // bluetooth background worker thread to send and receive datapt1
+//    private BluetoothSocket BTSocket = null; // bi-directional client-to-client datapt1 path
 //
 //    private final static int REQUEST_ENABLE_BT = 1; // used to identify adding bluetooth names
 //    private final static int MESSAGE_READ = 2; // used in bluetooth handler to identify message update
@@ -172,7 +172,7 @@
 //    }
 //
 //    @Override
-//    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+//    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent datapt1) {
 //        ToggleButton btn_btstate = findViewById(R.id.btn_btstate);
 //        if(requestCode==requestCodeForEnable){
 //            if(resultCode==RESULT_OK){
@@ -297,7 +297,7 @@
 //                    bytes = mmInStream.available();
 //                    if(bytes != 0) {
 //                        buffer = new byte[1024];
-//                        SystemClock.sleep(10); //pause and wait for rest of data. Adjust this depending on your sending speed.
+//                        SystemClock.sleep(10); //pause and wait for rest of datapt1. Adjust this depending on your sending speed.
 //                        bytes = mmInStream.available(); // how many bytes are ready to be read?
 //                        bytes = mmInStream.read(buffer, 0, bytes); // record how many bytes we actually read
 //                        BTHandler.obtainMessage(MESSAGE_READ, bytes, -1, buffer)
@@ -318,19 +318,19 @@
 //        btn_exercises.setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View view) {
-//                startActivity(new Intent(bluetooth.this, exercises.class));
+//                startActivity(new Intent(bluetooth.this, exercisespt1.class));
 //            }
 //        });
 //        btn_data.setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View view) {
-//                startActivity(new Intent(bluetooth.this, data.class));
+//                startActivity(new Intent(bluetooth.this, datapt1.class));
 //            }
 //        });
 //        btn_profile.setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View view) {
-//                startActivity(new Intent(bluetooth.this, profile.class));
+//                startActivity(new Intent(bluetooth.this, profilept1.class));
 //            }
 //        });
 //    }

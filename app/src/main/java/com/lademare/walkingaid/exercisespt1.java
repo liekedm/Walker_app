@@ -1,6 +1,9 @@
 package com.lademare.walkingaid;
 
-/*  bluetooth code using tutorial: Android Bluetooth Connectivity Tutorial - Sarthi Technology and example: Simple Android Bluetooth Application with Arduino Example - justin bauer*/
+/*
+Bluetooth code using tutorial: Android Bluetooth Connectivity Tutorial - Sarthi Technology and example: Simple Android Bluetooth Application with Arduino Example - justin bauer
+Rrite to file code made using example of Javed Khan from Creative Apps
+*/
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -17,7 +20,6 @@ import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.ToneGenerator;
 import android.os.Bundle;
-import android.os.SystemClock;
 import android.os.Vibrator;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -30,12 +32,13 @@ import android.widget.Toast;
 import android.widget.ToggleButton;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Method;
 import java.util.UUID;
 import android.os.Handler;
 
-public class exercises extends AppCompatActivity {
+public class exercisespt1 extends AppCompatActivity {
 
     SensorManager sensorManager;
     boolean ex_1;
@@ -50,9 +53,9 @@ public class exercises extends AppCompatActivity {
 
     BluetoothAdapter myBluetoothAdapter;
     private final UUID PORT_UUID = UUID.fromString("00001101-0000-1000-8000-00805f9b34fb");//Serial Port Service ID
-    private final String TAG = exercises.class.getSimpleName();
+    private final String TAG = exercisespt1.class.getSimpleName();
     private BluetoothSocket BTSocket = null;
-    private exercises.ConnectedThread mConnectedThread;
+    private exercisespt1.ConnectedThread mConnectedThread;
     private Handler BTHandler;
     Intent btEnablingIntent;
     int requestCodeForEnable;
@@ -82,7 +85,7 @@ public class exercises extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         overridePendingTransition(0, 0);
-        setContentView(R.layout.activity_exercises);
+        setContentView(R.layout.activity_exercises_pt1);
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LOCKED);
 
@@ -121,8 +124,8 @@ public class exercises extends AppCompatActivity {
     }
 
     protected void practice() {
-        if ((!(inputdata1.equals(readMessage)))&&(newdata)){ // while recognizing the incomming data didn't work, check if the data changes
-            newdata = false; // while the data changes 2, from nothing to heel-strike and back, only count the first
+        if ((!(inputdata1.equals(readMessage)))&&(newdata)){ // while recognizing the incomming datapt1 didn't work, check if the datapt1 changes
+            newdata = false; // while the datapt1 changes 2, from nothing to heel-strike and back, only count the first
             result = "heel-strike";
         }  else {
             newdata = true;
@@ -135,17 +138,17 @@ public class exercises extends AppCompatActivity {
             if (ex_time > 30){ // start measuring after certain time to allow the user to store the phone away first
                 timebetweensteps ++;
                 if (result.equals("heel-strike")){
-                    if ((timebetweensteps/old_average)>2 || (timebetweensteps/old_average)<0.4){ // don't take outliers into account, can be caused by extern source
+                    new_measurement = timebetweensteps;
+                    if ((new_measurement/old_average)>3){ // don't take outliers into account, can be caused by extern source
                         new_measurement = old_average;
-                    } else {
-                        new_measurement = timebetweensteps;
+                        Toast.makeText(getApplicationContext(),"outlier",Toast.LENGTH_SHORT).show();
                     }
                     timebetweensteps = 0;
                     new_average = ((9*old_average+new_measurement)/10); // approximate average, last measurements have most impact
                     old_average = new_average;
                 }
             }
-            if (ex_time > 60) { // give feedback after some data is collected to have some valid input
+            if (ex_time > 60) { // give feedback after some datapt1 is collected to have some valid input
                 offrhythmtimer--;
                 if (((new_measurement/old_average)<0.9)||((new_measurement/old_average)>1.1)&&(result.equals("heel-strike"))){ // check if the new step is in rhythm or not
                     offrhythmtimer = 30; // check is there are multible steps not in rhythm in a certain amount of time
@@ -181,6 +184,10 @@ public class exercises extends AppCompatActivity {
                         }
                     }
                 }
+                if (result.equals("heel-strike")){
+                    Context context = getApplicationContext();
+                    writetofile(context);
+                }
             }
         }
 
@@ -192,6 +199,19 @@ public class exercises extends AppCompatActivity {
         TextView tvfeedbacktimer = findViewById(R.id.tvfeedbacktimer); tvfeedbacktimer.setText(String.valueOf(feedbacktimer));
     }
 
+    protected void writetofile(Context context){
+        try {
+            OutputStreamWriter outputStreamWriter = new OutputStreamWriter(context.openFileOutput("datawalker.txt", Context.MODE_APPEND));
+            String data = ("timebetweensteps = "+ Integer.toString(timebetweensteps)+"\n"+"new_average = "+Integer.toString(new_average)+"\n"+"rhythmconsistent"+Boolean.toString(rhythmconsistent)+"\n");
+            data += "\n";
+            outputStreamWriter.append(data);
+            outputStreamWriter.close();
+        }
+        catch (IOException e) {
+            Log.e("Exception", "File write failed: " + e.toString());
+        }
+    }
+
     protected void menu() {
         Button btn_data = findViewById(R.id.btn_data);
         Button btn_profile = findViewById(R.id.btn_profile);
@@ -200,13 +220,13 @@ public class exercises extends AppCompatActivity {
         btn_data.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(exercises.this, data.class));
+                startActivity(new Intent(exercisespt1.this, datapt1.class));
             }
         });
         btn_profile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(exercises.this, profile.class));
+                startActivity(new Intent(exercisespt1.this, profilept1.class));
             }
         });
         ImageButton btn_bluetooth = findViewById(R.id.btn_bluetooth);
@@ -214,6 +234,13 @@ public class exercises extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 bluetoothconnect();
+            }
+        });
+        Button login = findViewById(R.id.login);
+        login.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(exercisespt1.this, login.class));
             }
         });
     }
@@ -418,7 +445,7 @@ public class exercises extends AppCompatActivity {
                     bytes = mmInStream.available();
                     if(bytes != 0) {
                         buffer = new byte[1024];
-                        //SystemClock.sleep(50); //pause and wait for rest of data. Adjust this depending on your sending speed.
+                        //SystemClock.sleep(50); //pause and wait for rest of datapt1. Adjust this depending on your sending speed.
                         bytes = mmInStream.available(); // how many bytes are ready to be read?
                         bytes = mmInStream.read(buffer, 0, bytes); // record how many bytes we actually read
                         BTHandler.obtainMessage(MESSAGE_READ, bytes, -1, buffer)

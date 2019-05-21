@@ -16,15 +16,22 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".profile" />
-        <activity android:name=".data" />
-        <activity android:name=".exercises">
+        <activity android:name=".choosepatient"></activity>
+        <activity android:name=".exercisespt2" />
+        <activity android:name=".login">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".profilept1" />
+        <activity android:name=".datapt1" />
+        <activity android:name=".exercisespt1" />
+        <activity android:name=".profiletp1" />
+        <activity android:name=".datatp1" />
+        <activity android:name=".exercisestp1" />
+
     </application>
 
 </manifest>

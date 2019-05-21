@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".profile">
+    tools:context=".profilept1">
 
     <include
         layout="@layout/bottommenu"
@@ -98,20 +98,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/iv_bg_weightbearing" />
 
-    <EditText
-        android:id="@+id/edittherapistname"
-        android:layout_width="200dp"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
-        android:ems="10"
-        android:imeOptions="actionDone"
-        android:inputType="textPersonName"
-        android:textColor="@color/colorText"
-        android:textSize="14sp"
-        app:layout_constraintBottom_toBottomOf="@+id/iv_bg_weightbearing"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/iv_bg_weightbearing" />
-
     <!-- Message -->
 
     <ImageView
@@ -186,6 +172,16 @@
         app:layout_constraintBottom_toBottomOf="@+id/iv_bg_weight"
         app:layout_constraintEnd_toEndOf="@+id/iv_bg_weight"
         app:layout_constraintTop_toTopOf="@+id/iv_bg_weight" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="32dp"
+        android:text="Kate"
+        app:layout_constraintBottom_toBottomOf="@+id/iv_bg_weightbearing"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/iv_bg_weightbearing" />
 
 
 </android.support.constraint.ConstraintLayout>
