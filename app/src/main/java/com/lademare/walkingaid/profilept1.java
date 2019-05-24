@@ -15,7 +15,6 @@ import android.widget.ToggleButton;
 
 public class profilept1 extends AppCompatActivity{
 
-    EditText edittherapistname;
     EditText editMessege;
 
     public static final String limb = "limb";

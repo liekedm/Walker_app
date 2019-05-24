@@ -20,6 +20,7 @@ import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.ToneGenerator;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Vibrator;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -30,11 +31,15 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
+
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Method;
+import java.nio.charset.Charset;
 import java.util.UUID;
 import android.os.Handler;
 
@@ -54,29 +59,37 @@ public class exercisespt1 extends AppCompatActivity {
     BluetoothAdapter myBluetoothAdapter;
     private final UUID PORT_UUID = UUID.fromString("00001101-0000-1000-8000-00805f9b34fb");//Serial Port Service ID
     private final String TAG = exercisespt1.class.getSimpleName();
-    private BluetoothSocket BTSocket = null;
-    private exercisespt1.ConnectedThread mConnectedThread;
-    private Handler BTHandler;
+    private BluetoothSocket BTSocket1 = null;
+    private BluetoothSocket BTSocket2 = null;
+    private exercisespt1.ConnectedThread1 mConnectedThread1;
+    private exercisespt1.ConnectedThread2 mConnectedThread2;
+    private Handler BTHandler1;
     Intent btEnablingIntent;
     int requestCodeForEnable;
     private final static int MESSAGE_READ = 2; // used in bluetooth handler to identify message update
     private final static int CONNECTING_STATUS = 3; // used in bluetooth handler to identify message status
 
-    String inputdata1 = " ";
+    public static final String walkingaid = "walkingaid";
+
     String readMessage = " ";
     String result;
-    boolean newdata = false;
+    int time_ex = 0;
 
-    int ex_time = 0;
-    int timebetweensteps = 0;
-    int new_measurement = 0;
-    int old_average = 10;
-    int new_average;
-    int timer = 0;
+    int time_step = 0;
+    int new_measurement_step = 0;
+    int old_average_step = 10;
+    int new_average_step;
+    int timer_step = 0;
+    String walkinggait;
+    int time_footaid = 0;
+    int new_measurement_aid = 0;
+    int old_average_aid = 10;
+    int new_average_aid;
+
     boolean rhythmconsistent;
     int offrhythm = 0;
-    int offrhythmtimer = 30;
-    int feedbacktimer = 10;
+    int timer_offrhythm = 30;
+    int timer_feedback = 10;
 
 
 
@@ -107,7 +120,7 @@ public class exercisespt1 extends AppCompatActivity {
             findViewById(R.id.input1); input1.setVisibility(View.INVISIBLE);
         }
 
-        BTHandler = new Handler() {
+        BTHandler1 = new Handler() {
             public void handleMessage(android.os.Message msg) {
                 if (msg.what == MESSAGE_READ) {
                     try {
@@ -124,50 +137,79 @@ public class exercisespt1 extends AppCompatActivity {
     }
 
     protected void practice() {
-        if ((!(inputdata1.equals(readMessage)))&&(newdata)){ // while recognizing the incomming datapt1 didn't work, check if the datapt1 changes
-            newdata = false; // while the datapt1 changes 2, from nothing to heel-strike and back, only count the first
-            result = "heel-strike";
-        }  else {
-            newdata = true;
+        if (readMessage.contains("foot")){
+            result = "foot";
+//            final MediaPlayer foot = MediaPlayer.create(this, R.raw.foot);
+//            foot.start();
+        } else if (readMessage.contains("aid")){
+            result = "aid";
+//            final MediaPlayer stick = MediaPlayer.create(this, R.raw.stick);
+//            stick.start();
+        } else {
             result = " ";
         }
-        inputdata1 = readMessage;
 
         if (ex_1_start||ex_2_start||ex_3_start){
-            ex_time++; // timer to see how long the exercise is been going to determine fase
-            if (ex_time > 30){ // start measuring after certain time to allow the user to store the phone away first
-                timebetweensteps ++;
-                if (result.equals("heel-strike")){
-                    new_measurement = timebetweensteps;
-                    if ((new_measurement/old_average)>3){ // don't take outliers into account, can be caused by extern source
-                        new_measurement = old_average;
+            time_ex++; // timer to see how long the exercise is been going to determine fase
+
+            if (time_ex > 30){ // start measuring after certain time to allow the user to store the phone away first
+                time_step++;
+                if (result.equals("foot")){
+                    new_measurement_step = time_step;
+                    if ((new_measurement_step/old_average_step)>3){ // don't take outliers into account, can be caused by extern source
+                        new_measurement_step = old_average_step;
                         Toast.makeText(getApplicationContext(),"outlier",Toast.LENGTH_SHORT).show();
                     }
-                    timebetweensteps = 0;
-                    new_average = ((9*old_average+new_measurement)/10); // approximate average, last measurements have most impact
-                    old_average = new_average;
+                    time_step = 0;
+                    new_average_step = ((9*old_average_step+new_measurement_step)/10); // approximate average, last measurements have most impact
+                    old_average_step = new_average_step;
+
+                    time_footaid ++;
+                    if (result.equals("aid")) {
+                        new_measurement_aid = time_footaid;
+                        if ((new_measurement_aid/old_average_aid)>3){ // don't take outliers into account, these can be caused by extern source, like waiting to cross the road
+                            new_measurement_aid = old_average_aid;
+                            Toast.makeText(getApplicationContext(),"outlier",Toast.LENGTH_SHORT).show();
+                        }
+                        time_footaid = 0;
+                        new_average_aid = ((9*old_average_aid+new_measurement_aid)/10); // approximate average, last measurements have most impact
+                        old_average_aid = new_average_aid;
+                    }
+//                    if (new_average_aid < 2){
+//                        walkinggait = "2-point";
+//                    } else {
+//                        walkinggait = "3-point";
+//                    }
                 }
             }
-            if (ex_time > 60) { // give feedback after some datapt1 is collected to have some valid input
-                offrhythmtimer--;
-                if (((new_measurement/old_average)<0.9)||((new_measurement/old_average)>1.1)&&(result.equals("heel-strike"))){ // check if the new step is in rhythm or not
-                    offrhythmtimer = 30; // check is there are multible steps not in rhythm in a certain amount of time
+
+            if (time_ex > 60) { // give feedback after some data is collected to have some valid input
+
+                if (result.equals("foot")){
+                    Context context = getApplicationContext();
+                    writetofile(context);
+                }
+
+                timer_offrhythm--;
+                if (((new_measurement_step / old_average_step) < 0.9) || ((new_measurement_step / old_average_step) > 1.1) && (result.equals("heel-strike"))) { // check if the new step is in rhythm or not
+                    timer_offrhythm = 30; // check is there are multible steps not in rhythm in a certain amount of time
                     offrhythm = offrhythm + 1;
                 }
-                if (offrhythmtimer <= 0){
+                if (timer_offrhythm <= 0) {
                     offrhythm = 0;
-                    offrhythmtimer = 30;
+                    timer_offrhythm = 30;
                 }
-                if (offrhythm >= 3){
+                if (offrhythm >= 3) {
                     rhythmconsistent = false;
                 }
-                timer++;
-                if (timer >= new_average) { // make sounds in rhythm of average
-                    timer = 0;
-                    if ((ex_time < 120) || (!rhythmconsistent)) { // give input in the beginning and when the rhythm is not constant
-                        feedbacktimer--; // give input at least 10 times to get back in rhythm
-                        if (feedbacktimer == 0){
-                            feedbacktimer = 10;
+                timer_step++;
+
+                if (timer_step >= new_average_step) { // make sounds in rhythm of average
+                    timer_step = 0;
+                    if ((time_ex < 120) || (!rhythmconsistent)) { // give input in the beginning and when the rhythm is not constant
+                        timer_feedback--; // give input at least 10 times to get back in rhythm
+                        if (timer_feedback == 0){
+                            timer_feedback = 10;
                             rhythmconsistent = true;
                         }
                         if (ex_1_start) {
@@ -184,31 +226,54 @@ public class exercisespt1 extends AppCompatActivity {
                         }
                     }
                 }
-                if (result.equals("heel-strike")){
-                    Context context = getApplicationContext();
-                    writetofile(context);
+
+                if (timer_step == new_average_aid) { // make sounds in rhythm of average
+                    if ((time_ex < 120) || (!rhythmconsistent)) { // give input in the beginning and when the rhythm is not constant
+                        if (ex_1_start) {
+                            ToneGenerator toneG = new ToneGenerator(AudioManager.STREAM_ALARM, 50);
+                            toneG.startTone(ToneGenerator.TONE_CDMA_DIAL_TONE_LITE, 100); // TONE_CDMA_ABBR_INTERCEPT : soft not to high or low
+                        }
+                        if (ex_2_start) {
+                            SharedPreferences sp = getSharedPreferences("sharedprefs", Activity.MODE_PRIVATE);
+                            if ((sp.getString(walkingaid, "Stick").equals("Crutch"))) {
+                                final MediaPlayer crutch = MediaPlayer.create(this, R.raw.crutch);
+                                crutch.start();
+                            } else {
+                                final MediaPlayer stick = MediaPlayer.create(this, R.raw.stick);
+                                stick.start();
+                            }
+                        }
+                        if (ex_3_start){
+                            Vibrator vibrator = (Vibrator)getSystemService(Context.VIBRATOR_SERVICE);
+                            vibrator.vibrate(100);
+                        }
+                    }
                 }
             }
         }
 
-        TextView tvtimer = findViewById(R.id.tvtimer); tvtimer.setText(String.valueOf(timer)); // used to check values
-        TextView tvaverage = findViewById(R.id.tvaverage); tvaverage.setText(String.valueOf(new_average));
-        TextView tvex_time = findViewById(R.id.tvex_time); tvex_time.setText(String.valueOf(ex_time));
-        TextView tvoffrhytmtimer = findViewById(R.id.tvoffrhythmtimer); tvoffrhytmtimer.setText(String.valueOf(offrhythmtimer));
+        TextView tvtimer = findViewById(R.id.tvtimer); tvtimer.setText(String.valueOf(timer_step)); // used to check values
+        TextView tvaverage = findViewById(R.id.tvaverage); tvaverage.setText(String.valueOf(new_average_step));
+        TextView tvaverageaid = findViewById(R.id.tvaverageaid); tvaverageaid.setText(String.valueOf(new_average_aid));
+
+        TextView tvex_time = findViewById(R.id.tvex_time); tvex_time.setText(String.valueOf(time_ex));
+        TextView tvoffrhytmtimer = findViewById(R.id.tvoffrhythmtimer); tvoffrhytmtimer.setText(String.valueOf(timer_offrhythm));
         TextView tvoffrhytm = findViewById(R.id.tvoffrhythm); tvoffrhytm.setText(String.valueOf(offrhythm));
-        TextView tvfeedbacktimer = findViewById(R.id.tvfeedbacktimer); tvfeedbacktimer.setText(String.valueOf(feedbacktimer));
+        TextView tvfeedbacktimer = findViewById(R.id.tvfeedbacktimer); tvfeedbacktimer.setText(String.valueOf(timer_feedback));
     }
 
     protected void writetofile(Context context){
-        try {
-            OutputStreamWriter outputStreamWriter = new OutputStreamWriter(context.openFileOutput("datawalker.txt", Context.MODE_APPEND));
-            String data = ("timebetweensteps = "+ Integer.toString(timebetweensteps)+"\n"+"new_average = "+Integer.toString(new_average)+"\n"+"rhythmconsistent"+Boolean.toString(rhythmconsistent)+"\n");
+        try
+        {
+            OutputStreamWriter outputStreamWriter = new OutputStreamWriter(context.openFileOutput("data_walker.txt", Context.MODE_APPEND));
+            String data = ("time_step = "+ Integer.toString(time_step)+"\n"+"new_average = "+Integer.toString(new_average_step)+"\n"+"rhythmconsistent"+Boolean.toString(rhythmconsistent)+"\n"+"time-aid"+Integer.toString(time_footaid)+"\n");
             data += "\n";
             outputStreamWriter.append(data);
             outputStreamWriter.close();
+            Toast.makeText(this, "Data has been written to Report File", Toast.LENGTH_SHORT).show();
         }
-        catch (IOException e) {
-            Log.e("Exception", "File write failed: " + e.toString());
+        catch(IOException e) {
+            e.printStackTrace();
         }
     }
 
@@ -274,7 +339,7 @@ public class exercisespt1 extends AppCompatActivity {
             public void onClick(View view) {
                 if (ex_1) {
                     Toast.makeText(getApplicationContext(),"Exercise 1 stopped",Toast.LENGTH_SHORT).show(); ex_1_start = false;
-                    ex_time = 0; timebetweensteps = 0; new_measurement = 0; old_average = 10; timer = 0; // reset values
+                    resetvalue();
                 } else {
                     if(!myBluetoothAdapter.isEnabled()) {
                         Toast.makeText(getApplicationContext(),"Turn on bluetooth",Toast.LENGTH_SHORT).show(); ex_1_start = true;}
@@ -293,7 +358,7 @@ public class exercisespt1 extends AppCompatActivity {
             public void onClick(View view) {
                 if (ex_2) {
                     Toast.makeText(getApplicationContext(),"Exercise 2 stopped",Toast.LENGTH_SHORT).show(); ex_2_start = false;
-                    ex_time = 0; timebetweensteps = 0; new_measurement = 0; old_average = 10; timer = 0;
+                    resetvalue();
                 } else {
                     if(!myBluetoothAdapter.isEnabled()) {
                         Toast.makeText(getApplicationContext(),"Turn on bluetooth",Toast.LENGTH_SHORT).show(); ex_2_start = true;}
@@ -312,7 +377,7 @@ public class exercisespt1 extends AppCompatActivity {
             public void onClick(View view) {
                 if (ex_3) {
                     Toast.makeText(getApplicationContext(),"Exercise 3 stopped",Toast.LENGTH_SHORT).show(); ex_3_start = false;
-                    ex_time = 0; timebetweensteps = 0; new_measurement = 0; old_average = 10; timer = 0;
+                    resetvalue();
                 } else {
                     if(!myBluetoothAdapter.isEnabled()) {
                         Toast.makeText(getApplicationContext(),"Turn on bluetooth",Toast.LENGTH_SHORT).show(); ex_3_start = true;}
@@ -327,14 +392,22 @@ public class exercisespt1 extends AppCompatActivity {
         });
     }
 
-
+    protected void resetvalue(){
+        time_ex = 0;
+        time_step = 0;
+        new_measurement_step = 0;
+        old_average_step = 10;
+        timer_step = 0;
+    }
 
 
     /* code to enable bluetooth */
 
     String address1 = ("98:D3:41:FD:3D:B6");
-    //String address1 = ("98:D3:81:FD:4B:87");
-    String name1 = ("Sensor_Shoe");
+    String address2 = ("98:D3:81:FD:4B:87");
+    String name1 = ("Sensor_Foot");
+    String name2 = ("Sensor_Aid");
+
 
     @SuppressLint("HandlerLeak")
     protected void bluetoothconnect() {
@@ -378,61 +451,99 @@ public class exercisespt1 extends AppCompatActivity {
             public void run() {
                 boolean fail = false;
 
-                BluetoothDevice device = myBluetoothAdapter.getRemoteDevice(address1);
-
+                BluetoothDevice device1 = myBluetoothAdapter.getRemoteDevice(address1);
                 try {
-                    BTSocket = createBluetoothSocket(device);
+                    BTSocket1 = createBluetoothSocket1(device1);
                 } catch (IOException e) {
                     fail = true;
-                    Toast.makeText(getBaseContext(), "Socket creation failed", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getBaseContext(), "Socket1 creation failed", Toast.LENGTH_SHORT).show();
                 }
                 // Establish the Bluetooth socket connection.
                 try {
-                    BTSocket.connect();
+                    BTSocket1.connect();
                 } catch (IOException e) {
                     try {
                         fail = true;
-                        BTSocket.close();
-                        BTHandler.obtainMessage(CONNECTING_STATUS, -1, -1)
+                        BTSocket1.close();
+                        BTHandler1.obtainMessage(CONNECTING_STATUS, -1, -1)
                                 .sendToTarget();
                     } catch (IOException e2) {
                         //insert code to deal with this
-                        Toast.makeText(getBaseContext(), "Socket creation failed", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getBaseContext(), "Socket1 creation failed", Toast.LENGTH_SHORT).show();
                     }
                 }
                 if (!fail) {
-                    mConnectedThread = new ConnectedThread(BTSocket);
-                    mConnectedThread.start();
-                    BTHandler.obtainMessage(CONNECTING_STATUS, 1, -1, name1)
+                    mConnectedThread1 = new ConnectedThread1(BTSocket1);
+                    mConnectedThread1.start();
+                    BTHandler1.obtainMessage(CONNECTING_STATUS, 1, -1, name1)
                             .sendToTarget();
                 }
+
+                BluetoothDevice device2 = myBluetoothAdapter.getRemoteDevice(address2);
+                try {
+                    BTSocket2 = createBluetoothSocket2(device2);
+                } catch (IOException e) {
+                    fail = true;
+                    Toast.makeText(getBaseContext(), "Socket2 creation failed", Toast.LENGTH_SHORT).show();
+                }
+                // Establish the Bluetooth socket connection.
+                try {
+                    BTSocket2.connect();
+                } catch (IOException e) {
+                    try {
+                        fail = true;
+                        BTSocket2.close();
+                        BTHandler1.obtainMessage(CONNECTING_STATUS, -1, -1)
+                                .sendToTarget();
+                    } catch (IOException e2) {
+                        //insert code to deal with this
+                        Toast.makeText(getBaseContext(), "Socket2 creation failed", Toast.LENGTH_SHORT).show();
+                    }
+                }
+                if (!fail) {
+                    mConnectedThread2 = new ConnectedThread2(BTSocket2);
+                    mConnectedThread2.start();
+                    BTHandler1.obtainMessage(CONNECTING_STATUS, 1, -1, name2)
+                            .sendToTarget();
+                }
+
             }
         }.start();
     }
 
-    private BluetoothSocket createBluetoothSocket(BluetoothDevice device) throws IOException {
+    private BluetoothSocket createBluetoothSocket1(BluetoothDevice device1) throws IOException {
         try {
-            final Method m = device.getClass().getMethod("createInsecureRfcommSocketToServiceRecord", UUID.class);
-            return (BluetoothSocket) m.invoke(device, PORT_UUID);
+            final Method m1 = device1.getClass().getMethod("createInsecureRfcommSocketToServiceRecord", UUID.class);
+            return (BluetoothSocket) m1.invoke(device1, PORT_UUID);
         } catch (Exception e) {
             Log.e(TAG, "Could not create Insecure RFComm Connection",e);
         }
-        return  device.createRfcommSocketToServiceRecord(PORT_UUID);
+        return  device1.createRfcommSocketToServiceRecord(PORT_UUID);
     }
 
-    private class ConnectedThread extends Thread {
-        private final BluetoothSocket mmSocket;
-        private final InputStream mmInStream;
+    private BluetoothSocket createBluetoothSocket2(BluetoothDevice device2) throws IOException {
+        try {
+            final Method m2 = device2.getClass().getMethod("createInsecureRfcommSocketToServiceRecord", UUID.class);
+            return (BluetoothSocket) m2.invoke(device2, PORT_UUID);
+        } catch (Exception e) {
+            Log.e(TAG, "Could not create Insecure RFComm Connection",e);
+        }
+        return  device2.createRfcommSocketToServiceRecord(PORT_UUID);
+    }
 
-        public ConnectedThread(BluetoothSocket socket) {
-            mmSocket = socket;
+    private class ConnectedThread1 extends Thread {
+        private final BluetoothSocket mmSocket1;
+        private final InputStream mmInStream1;
+
+        public ConnectedThread1(BluetoothSocket socket1) {
+            mmSocket1 = socket1;
             InputStream tmpIn = null;
             // Get the input and output streams, using temp objects because
             // member streams are final
             try {
-                tmpIn = socket.getInputStream();
+                tmpIn = socket1.getInputStream();
             } catch (IOException e) { }
-            mmInStream = tmpIn;
+            mmInStream1 = tmpIn;
         }
 
         public void run() {
@@ -442,13 +553,52 @@ public class exercisespt1 extends AppCompatActivity {
             while (true) {
                 try {
                     // Read from the InputStream
-                    bytes = mmInStream.available();
+                    bytes = mmInStream1.available();
                     if(bytes != 0) {
                         buffer = new byte[1024];
                         //SystemClock.sleep(50); //pause and wait for rest of datapt1. Adjust this depending on your sending speed.
-                        bytes = mmInStream.available(); // how many bytes are ready to be read?
-                        bytes = mmInStream.read(buffer, 0, bytes); // record how many bytes we actually read
-                        BTHandler.obtainMessage(MESSAGE_READ, bytes, -1, buffer)
+                        bytes = mmInStream1.available(); // how many bytes are ready to be read?
+                        bytes = mmInStream1.read(buffer, 0, bytes); // record how many bytes we actually read
+                        BTHandler1.obtainMessage(MESSAGE_READ, bytes, -1, buffer)
+                                .sendToTarget(); // Send the obtained bytes to the UI activity
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    break;
+                }
+            }
+        }
+    }
+
+    private class ConnectedThread2 extends Thread {
+        private final BluetoothSocket mmSocket2;
+        private final InputStream mmInStream2;
+
+        public ConnectedThread2(BluetoothSocket socket2) {
+            mmSocket2 = socket2;
+            InputStream tmpIn = null;
+            // Get the input and output streams, using temp objects because
+            // member streams are final
+            try {
+                tmpIn = socket2.getInputStream();
+            } catch (IOException e) { }
+            mmInStream2 = tmpIn;
+        }
+
+        public void run() {
+            byte[] buffer = new byte[1024];  // buffer store for the stream
+            int bytes; // bytes returned from read()
+            // Keep listening to the InputStream until an exception occurs
+            while (true) {
+                try {
+                    // Read from the InputStream
+                    bytes = mmInStream2.available();
+                    if(bytes != 0) {
+                        buffer = new byte[1024];
+                        //SystemClock.sleep(50); //pause and wait for rest of datapt1. Adjust this depending on your sending speed.
+                        bytes = mmInStream2.available(); // how many bytes are ready to be read?
+                        bytes = mmInStream2.read(buffer, 0, bytes); // record how many bytes we actually read
+                        BTHandler1.obtainMessage(MESSAGE_READ, bytes, -1, buffer)
                                 .sendToTarget(); // Send the obtained bytes to the UI activity
                     }
                 } catch (IOException e) {

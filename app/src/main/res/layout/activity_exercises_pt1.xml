@@ -205,59 +205,68 @@
         android:id="@+id/tvaverage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
+        android:layout_marginStart="60dp"
         android:layout_marginTop="24dp"
         android:text="average"
         app:layout_constraintStart_toEndOf="@+id/input1"
         app:layout_constraintTop_toBottomOf="@+id/iv_bg_exercise3" />
 
     <TextView
+        android:id="@+id/tvaverageaid"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="60dp"
+        android:layout_marginTop="16dp"
+        android:text="average"
+        app:layout_constraintStart_toEndOf="@+id/input1"
+        app:layout_constraintTop_toBottomOf="@+id/tvaverage" />
+
+    <TextView
         android:id="@+id/tvtimer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
         android:text="timer"
+        app:layout_constraintBottom_toBottomOf="@+id/tvaverageaid"
         app:layout_constraintStart_toEndOf="@+id/tvaverage"
-        app:layout_constraintTop_toBottomOf="@+id/iv_bg_exercise3" />
+        app:layout_constraintTop_toTopOf="@+id/tvaverage" />
 
     <TextView
         android:id="@+id/tvex_time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="16dp"
         android:text="extime"
-        app:layout_constraintStart_toEndOf="@+id/tvtimer"
-        app:layout_constraintTop_toBottomOf="@+id/iv_bg_exercise3" />
+        app:layout_constraintStart_toStartOf="@+id/input1"
+        app:layout_constraintTop_toBottomOf="@+id/input1" />
 
     <TextView
         android:id="@+id/tvoffrhythmtimer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:text="offrhythmtimer"
+        android:layout_marginTop="16dp"
+        android:text="r.timer"
         app:layout_constraintStart_toStartOf="@+id/tvaverage"
-        app:layout_constraintTop_toBottomOf="@+id/tvaverage" />
+        app:layout_constraintTop_toBottomOf="@+id/tvaverageaid" />
 
     <TextView
         android:id="@+id/tvoffrhythm"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="24dp"
-        android:text="offrhythm"
+        android:layout_marginStart="32dp"
+        android:text="or."
         app:layout_constraintStart_toEndOf="@+id/tvoffrhythmtimer"
-        app:layout_constraintTop_toBottomOf="@+id/tvex_time" />
+        app:layout_constraintTop_toTopOf="@+id/tvoffrhythmtimer" />
 
     <TextView
         android:id="@+id/tvfeedbacktimer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="24dp"
-        android:text="feedbacktimer"
+        android:layout_marginStart="32dp"
+        android:text="f.timer"
         app:layout_constraintStart_toEndOf="@+id/tvoffrhythm"
-        app:layout_constraintTop_toBottomOf="@+id/tvex_time" />
+        app:layout_constraintTop_toTopOf="@+id/tvoffrhythm" />
 
 </android.support.constraint.ConstraintLayout>
