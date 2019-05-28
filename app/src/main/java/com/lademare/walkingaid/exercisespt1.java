@@ -164,6 +164,7 @@ public class exercisespt1 extends AppCompatActivity {
                     new_average_step = ((9*old_average_step+new_measurement_step)/10); // approximate average, last measurements have most impact
                     old_average_step = new_average_step;
 
+                    time_footaid = 0;
                     time_footaid ++;
                     if (result.equals("aid")) {
                         new_measurement_aid = time_footaid;
@@ -171,15 +172,14 @@ public class exercisespt1 extends AppCompatActivity {
                             new_measurement_aid = old_average_aid;
                             Toast.makeText(getApplicationContext(),"outlier",Toast.LENGTH_SHORT).show();
                         }
-                        time_footaid = 0;
-                        new_average_aid = ((9*old_average_aid+new_measurement_aid)/10); // approximate average, last measurements have most impact
+                        // approximate average, last measurements have most impact
                         old_average_aid = new_average_aid;
                     }
-//                    if (new_average_aid < 2){
-//                        walkinggait = "2-point";
-//                    } else {
-//                        walkinggait = "3-point";
-//                    }
+                    if (new_average_aid < 2){
+                        walkinggait = "2-point";
+                    } else {
+                        walkinggait = "3-point";
+                    }
                 }
             }
 
@@ -255,7 +255,6 @@ public class exercisespt1 extends AppCompatActivity {
         TextView tvtimer = findViewById(R.id.tvtimer); tvtimer.setText(String.valueOf(timer_step)); // used to check values
         TextView tvaverage = findViewById(R.id.tvaverage); tvaverage.setText(String.valueOf(new_average_step));
         TextView tvaverageaid = findViewById(R.id.tvaverageaid); tvaverageaid.setText(String.valueOf(new_average_aid));
-
         TextView tvex_time = findViewById(R.id.tvex_time); tvex_time.setText(String.valueOf(time_ex));
         TextView tvoffrhytmtimer = findViewById(R.id.tvoffrhythmtimer); tvoffrhytmtimer.setText(String.valueOf(timer_offrhythm));
         TextView tvoffrhytm = findViewById(R.id.tvoffrhythm); tvoffrhytm.setText(String.valueOf(offrhythm));
