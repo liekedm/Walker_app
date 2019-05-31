@@ -17,7 +17,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".choosepatient"></activity>
+        <activity android:name=".getdata"></activity>
+        <activity android:name=".choosepatient" />
         <activity android:name=".exercisespt2" />
         <activity android:name=".login">
             <intent-filter>
@@ -32,7 +33,6 @@
         <activity android:name=".profiletp1" />
         <activity android:name=".datatp1" />
         <activity android:name=".exercisestp1" />
-
     </application>
 
 </manifest>

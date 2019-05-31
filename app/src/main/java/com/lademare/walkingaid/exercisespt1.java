@@ -32,6 +32,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
+import java.nio.file.Files;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -40,6 +45,7 @@ import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Method;
 import java.nio.charset.Charset;
+import java.util.List;
 import java.util.UUID;
 import android.os.Handler;
 
@@ -55,6 +61,8 @@ public class exercisespt1 extends AppCompatActivity {
     public static final String ex_1_status = "ex_1_status"; // status is saved in shared preferences to be able to switch activities
     public static final String ex_2_status = "ex_2_status";
     public static final String ex_3_status = "ex_3_status";
+    public static final String average_aid = "old_average_aid";
+    public static final String average_step = "old_average_step";
 
     BluetoothAdapter myBluetoothAdapter;
     private final UUID PORT_UUID = UUID.fromString("00001101-0000-1000-8000-00805f9b34fb");//Serial Port Service ID
@@ -77,20 +85,21 @@ public class exercisespt1 extends AppCompatActivity {
 
     int time_step = 0;
     int new_measurement_step = 0;
-    int old_average_step = 10;
+    int old_average_step;
     int new_average_step;
     int timer_step = 0;
     String walkinggait;
     int time_footaid = 0;
     int new_measurement_aid = 0;
-    int old_average_aid = 10;
+    int old_average_aid;
     int new_average_aid;
 
-    boolean rhythmconsistent;
+    boolean rhythmconsistent = true;
     int offrhythm = 0;
     int timer_offrhythm = 30;
     int timer_feedback = 10;
 
+    boolean newstart;
 
 
     @SuppressLint("HandlerLeak")
@@ -120,6 +129,19 @@ public class exercisespt1 extends AppCompatActivity {
             findViewById(R.id.input1); input1.setVisibility(View.INVISIBLE);
         }
 
+        Button getdata = findViewById(R.id.getdata);
+        getdata.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(exercisespt1.this, getdata.class));
+            }
+        });
+
+        SharedPreferences sp = getSharedPreferences("sharedprefs", Activity.MODE_PRIVATE);
+        old_average_aid = sp.getInt(average_aid, 15);
+        old_average_step = sp.getInt(average_step, 15);
+
+
         BTHandler1 = new Handler() {
             public void handleMessage(android.os.Message msg) {
                 if (msg.what == MESSAGE_READ) {
@@ -139,55 +161,57 @@ public class exercisespt1 extends AppCompatActivity {
     protected void practice() {
         if (readMessage.contains("foot")){
             result = "foot";
-//            final MediaPlayer foot = MediaPlayer.create(this, R.raw.foot);
-//            foot.start();
         } else if (readMessage.contains("aid")){
             result = "aid";
-//            final MediaPlayer stick = MediaPlayer.create(this, R.raw.stick);
-//            stick.start();
         } else {
             result = " ";
         }
 
         if (ex_1_start||ex_2_start||ex_3_start){
             time_ex++; // timer to see how long the exercise is been going to determine fase
-
-            if (time_ex > 30){ // start measuring after certain time to allow the user to store the phone away first
+            if (newstart){
+                Context context = getApplicationContext();
+                writedatatofile(context);
+                newstart = false;
+            }
+            if (time_ex > 50) { // start measuring after certain time to allow the user to store the phone away first
                 time_step++;
-                if (result.equals("foot")){
+                time_footaid++;
+                if (result.equals("aid")) {
+                    time_footaid = 0;
+                }
+                if (result.equals("foot")) {
+                    // average_step
                     new_measurement_step = time_step;
-                    if ((new_measurement_step/old_average_step)>3){ // don't take outliers into account, can be caused by extern source
+                    if ((new_measurement_step / old_average_step) > 3) { // don't take outliers into account, can be caused by extern source
                         new_measurement_step = old_average_step;
-                        Toast.makeText(getApplicationContext(),"outlier",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), "outlier", Toast.LENGTH_SHORT).show();
                     }
                     time_step = 0;
-                    new_average_step = ((9*old_average_step+new_measurement_step)/10); // approximate average, last measurements have most impact
+                    new_average_step = ((9 * old_average_step + new_measurement_step) / 10); // approximate average, last measurements have most impact
                     old_average_step = new_average_step;
+                    // average_aid
+                    new_measurement_aid = time_footaid;
+                    if ((new_measurement_aid/old_average_aid)>3){ // don't take outliers into account, these can be caused by extern source, like waiting to cross the road
+                        new_measurement_aid = old_average_aid;
+                        Toast.makeText(getApplicationContext(),"outlier",Toast.LENGTH_SHORT).show();
+                    }
+                    new_average_aid = ((9 * old_average_aid + new_measurement_aid) / 10); // approximate average, last measurements have most impact
+                    old_average_aid = new_average_aid;
+                }
 
-                    time_footaid = 0;
-                    time_footaid ++;
-                    if (result.equals("aid")) {
-                        new_measurement_aid = time_footaid;
-                        if ((new_measurement_aid/old_average_aid)>3){ // don't take outliers into account, these can be caused by extern source, like waiting to cross the road
-                            new_measurement_aid = old_average_aid;
-                            Toast.makeText(getApplicationContext(),"outlier",Toast.LENGTH_SHORT).show();
-                        }
-                        // approximate average, last measurements have most impact
-                        old_average_aid = new_average_aid;
-                    }
-                    if (new_average_aid < 2){
-                        walkinggait = "2-point";
-                    } else {
-                        walkinggait = "3-point";
-                    }
+                if (new_average_aid < 3){
+                    walkinggait = "2-point";
+                } else {
+                    walkinggait = "3-point";
                 }
             }
 
-            if (time_ex > 60) { // give feedback after some data is collected to have some valid input
+            if (time_ex > 100) { // give feedback after some data is collected to have some valid input
 
                 if (result.equals("foot")){
                     Context context = getApplicationContext();
-                    writetofile(context);
+                    writedatatofile(context);
                 }
 
                 timer_offrhythm--;
@@ -206,15 +230,15 @@ public class exercisespt1 extends AppCompatActivity {
 
                 if (timer_step >= new_average_step) { // make sounds in rhythm of average
                     timer_step = 0;
-                    if ((time_ex < 120) || (!rhythmconsistent)) { // give input in the beginning and when the rhythm is not constant
+                    if ((time_ex < 200) || (!rhythmconsistent)) { // give input in the beginning and when the rhythm is not constant
                         timer_feedback--; // give input at least 10 times to get back in rhythm
                         if (timer_feedback == 0){
                             timer_feedback = 10;
                             rhythmconsistent = true;
                         }
                         if (ex_1_start) {
-                            ToneGenerator toneG = new ToneGenerator(AudioManager.STREAM_ALARM, 50);
-                            toneG.startTone(ToneGenerator.TONE_CDMA_DIAL_TONE_LITE, 100); // TONE_CDMA_ABBR_INTERCEPT : soft not to high or low
+                            final MediaPlayer biep1 = MediaPlayer.create(this, R.raw.biep1);
+                            biep1.start();
                         }
                         if (ex_2_start) {
                             final MediaPlayer foot = MediaPlayer.create(this, R.raw.foot);
@@ -227,11 +251,11 @@ public class exercisespt1 extends AppCompatActivity {
                     }
                 }
 
-                if (timer_step == new_average_aid) { // make sounds in rhythm of average
-                    if ((time_ex < 120) || (!rhythmconsistent)) { // give input in the beginning and when the rhythm is not constant
+                if (timer_step == new_average_aid && walkinggait.equals("3-point")) { // make sounds in rhythm of average
+                    if ((time_ex < 200) || (!rhythmconsistent)) { // give input in the beginning and when the rhythm is not constant
                         if (ex_1_start) {
-                            ToneGenerator toneG = new ToneGenerator(AudioManager.STREAM_ALARM, 50);
-                            toneG.startTone(ToneGenerator.TONE_CDMA_DIAL_TONE_LITE, 100); // TONE_CDMA_ABBR_INTERCEPT : soft not to high or low
+                            final MediaPlayer biep2 = MediaPlayer.create(this, R.raw.biep2);
+                            biep2.start();
                         }
                         if (ex_2_start) {
                             SharedPreferences sp = getSharedPreferences("sharedprefs", Activity.MODE_PRIVATE);
@@ -261,15 +285,20 @@ public class exercisespt1 extends AppCompatActivity {
         TextView tvfeedbacktimer = findViewById(R.id.tvfeedbacktimer); tvfeedbacktimer.setText(String.valueOf(timer_feedback));
     }
 
-    protected void writetofile(Context context){
+    protected void writedatatofile(Context context){
         try
         {
-            OutputStreamWriter outputStreamWriter = new OutputStreamWriter(context.openFileOutput("data_walker.txt", Context.MODE_APPEND));
-            String data = ("time_step = "+ Integer.toString(time_step)+"\n"+"new_average = "+Integer.toString(new_average_step)+"\n"+"rhythmconsistent"+Boolean.toString(rhythmconsistent)+"\n"+"time-aid"+Integer.toString(time_footaid)+"\n");
-            data += "\n";
+            OutputStreamWriter outputStreamWriter = new OutputStreamWriter(context.openFileOutput("data_log.txt", Context.MODE_APPEND));
+            String data;
+            if (newstart){
+                data = "Exersice started" + "\n" + "t.s a.s t.a a.a cnst" + "\n";
+            } else {
+                data = (Integer.toString(time_step)+"  "+Integer.toString(new_average_step)+"  "+Integer.toString(time_footaid)+"  "+Integer.toString(new_average_aid)+"  "+Boolean.toString(rhythmconsistent)+"\n");
+            }
             outputStreamWriter.append(data);
+            outputStreamWriter.append("\n\r");
             outputStreamWriter.close();
-            Toast.makeText(this, "Data has been written to Report File", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Data has been written to File", Toast.LENGTH_SHORT).show();
         }
         catch(IOException e) {
             e.printStackTrace();
@@ -342,7 +371,7 @@ public class exercisespt1 extends AppCompatActivity {
                 } else {
                     if(!myBluetoothAdapter.isEnabled()) {
                         Toast.makeText(getApplicationContext(),"Turn on bluetooth",Toast.LENGTH_SHORT).show(); ex_1_start = true;}
-                    else {Toast.makeText(getApplicationContext(),"Exercise 1 starts in 1 minute",Toast.LENGTH_SHORT).show(); ex_1_start = true;}
+                    else {Toast.makeText(getApplicationContext(),"Exercise 1 starts in 1 minute",Toast.LENGTH_SHORT).show(); ex_1_start = true; newstart = true;}
                 }
                 ex_1 = !ex_1;
                 SharedPreferences sp = getSharedPreferences("sharedprefs", Activity.MODE_PRIVATE);
@@ -361,7 +390,7 @@ public class exercisespt1 extends AppCompatActivity {
                 } else {
                     if(!myBluetoothAdapter.isEnabled()) {
                         Toast.makeText(getApplicationContext(),"Turn on bluetooth",Toast.LENGTH_SHORT).show(); ex_2_start = true;}
-                    else {Toast.makeText(getApplicationContext(),"Exercise 2 starts in 1 minute",Toast.LENGTH_SHORT).show(); ex_2_start = true; }
+                    else {Toast.makeText(getApplicationContext(),"Exercise 2 starts in 1 minute",Toast.LENGTH_SHORT).show(); ex_2_start = true; newstart = true;}
                 }
                 ex_2 = !ex_2;
                 SharedPreferences sp = getSharedPreferences("sharedprefs", Activity.MODE_PRIVATE);
@@ -380,7 +409,7 @@ public class exercisespt1 extends AppCompatActivity {
                 } else {
                     if(!myBluetoothAdapter.isEnabled()) {
                         Toast.makeText(getApplicationContext(),"Turn on bluetooth",Toast.LENGTH_SHORT).show(); ex_3_start = true;}
-                    else{ Toast.makeText(getApplicationContext(),"Exercise 3 starts in 1 minute",Toast.LENGTH_SHORT).show(); ex_3_start = true;}
+                    else{ Toast.makeText(getApplicationContext(),"Exercise 3 starts in 1 minute",Toast.LENGTH_SHORT).show(); ex_3_start = true;newstart = true;}
                 }
                 ex_3 = !ex_3;
                 SharedPreferences sp = getSharedPreferences("sharedprefs", Activity.MODE_PRIVATE);
@@ -393,10 +422,11 @@ public class exercisespt1 extends AppCompatActivity {
 
     protected void resetvalue(){
         time_ex = 0;
-        time_step = 0;
-        new_measurement_step = 0;
-        old_average_step = 10;
-        timer_step = 0;
+        SharedPreferences sp = getSharedPreferences("sharedprefs", Activity.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sp.edit();
+        editor.putInt("average_aid",  old_average_aid);
+        editor.putInt("average_step",  old_average_step);
+        editor.apply();
     }
 
 
