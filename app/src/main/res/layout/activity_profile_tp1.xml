@@ -1,0 +1,366 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".profilept1">
+
+    <include
+        layout="@layout/bottommenutp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!-- Limb -->
+
+    <ImageView
+        android:id="@+id/iv_bg_name"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginStart="-2dp"
+        android:layout_marginTop="150dp"
+        android:layout_marginEnd="-2dp"
+        android:background="@android:color/darker_gray"
+        android:padding="0.1dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@android:color/background_light" />
+
+    <TextView
+        android:id="@+id/tv_limb"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:text="@string/limb"
+        android:textColor="@color/colorAccent"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/iv_bg_name"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/iv_bg_name" />
+
+    <!-- Weight -->
+
+    <ImageView
+        android:id="@+id/iv_bg_weight"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginStart="-2dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="-2dp"
+        android:background="@android:color/darker_gray"
+        android:padding="0.1dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/iv_bg_name"
+        app:srcCompat="@android:color/background_light" />
+
+    <TextView
+        android:id="@+id/tv_walkingaid"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:text="@string/walkingaid"
+        android:textColor="@color/colorAccent"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/iv_bg_weight"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/iv_bg_weight" />
+
+    <!-- Weightbearing -->
+
+    <ImageView
+        android:id="@+id/iv_bg_weightbearing2"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginStart="-2dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="-2dp"
+        android:background="@android:color/darker_gray"
+        android:padding="0.1dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/iv_bg_weight"
+        app:srcCompat="@android:color/background_light" />
+
+    <ImageView
+        android:id="@+id/iv_bg_weightbearing3"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginStart="-2dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="-2dp"
+        android:background="@android:color/darker_gray"
+        android:padding="0.1dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/iv_bg_weightbearing2"
+        app:srcCompat="@android:color/background_light" />
+
+    <ImageView
+        android:id="@+id/iv_bg_weightbearing4"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginStart="-2dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="-2dp"
+        android:background="@android:color/darker_gray"
+        android:padding="0.1dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/iv_bg_weightbearing3"
+        app:srcCompat="@android:color/background_light" />
+
+    <!-- Message -->
+
+    <ImageView
+        android:id="@+id/iv_bg_weightbearing5"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginStart="-2dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="-2dp"
+        android:background="@android:color/darker_gray"
+        android:padding="0.1dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/iv_bg_weightbearing4"
+        app:srcCompat="@android:color/background_light" />
+
+    <ImageView
+        android:id="@+id/iv_bg_messege"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:layout_marginStart="-2dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="-2dp"
+        android:background="@android:color/darker_gray"
+        android:padding="0.1dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/iv_bg_weightbearing5"
+        app:srcCompat="@android:color/background_light" />
+
+    <TextView
+        android:id="@+id/tv_messege"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="24dp"
+        android:text="Messege"
+        android:textColor="@color/colorAccent"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/iv_bg_messege" />
+
+    <EditText
+        android:id="@+id/editMessege"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:ems="10"
+        android:imeOptions="actionDone"
+        android:inputType="textMultiLine"
+        android:textColor="@color/colorText"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="@+id/tv_messege"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/tv_messege"
+        app:layout_constraintTop_toTopOf="@+id/tv_messege" />
+
+    <TextView
+        android:id="@+id/tv_limb2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:text="Exercises"
+        android:textColor="@color/colorAccent"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/iv_bg_weightbearing2"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/iv_bg_weightbearing2" />
+
+    <TextView
+        android:id="@+id/tv_limb3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:text="Data"
+        android:textColor="@color/colorAccent"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/iv_bg_weightbearing3"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/iv_bg_weightbearing3" />
+
+    <ToggleButton
+        android:id="@+id/left_right"
+        style="@style/AppTheme"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:background="@android:color/white"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+        android:textColor="@color/colorText"
+        android:textOff="@string/left"
+        android:textOn="@string/right"
+        app:layout_constraintBottom_toBottomOf="@+id/iv_bg_name"
+        app:layout_constraintEnd_toEndOf="@+id/iv_bg_name"
+        app:layout_constraintTop_toTopOf="@+id/iv_bg_name" />
+
+    <ToggleButton
+        android:id="@+id/crutch_stick"
+        style="@style/AppTheme"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:background="@android:color/white"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+        android:textColor="@color/colorText"
+        android:textOff="@string/crutch"
+        android:textOn="@string/stick"
+        app:layout_constraintBottom_toBottomOf="@+id/iv_bg_weight"
+        app:layout_constraintEnd_toEndOf="@+id/iv_bg_weight"
+        app:layout_constraintTop_toTopOf="@+id/iv_bg_weight" />
+
+    <ToggleButton
+        android:id="@+id/crutch_stick2"
+        style="@style/AppTheme"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:background="@android:color/white"
+        android:checked="true"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+        android:textColor="@color/colorText"
+        android:textOff="Not visible"
+        android:textOn="Visible"
+        app:layout_constraintBottom_toBottomOf="@+id/iv_bg_weightbearing4"
+        app:layout_constraintStart_toStartOf="@+id/crutch_stick"
+        app:layout_constraintTop_toTopOf="@+id/iv_bg_weightbearing4" />
+
+    <ToggleButton
+        android:id="@+id/crutch_stick4"
+        style="@style/AppTheme"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:background="@android:color/white"
+        android:checked="true"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+        android:textColor="@color/colorText"
+        android:textOff="Not visible"
+        android:textOn="Visible"
+        app:layout_constraintBottom_toBottomOf="@+id/iv_bg_weightbearing5"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/iv_bg_weightbearing5" />
+
+    <ToggleButton
+        android:id="@+id/btn_datashow"
+        style="@style/AppTheme"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:background="@android:color/white"
+        android:checked="true"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+        android:textColor="@color/colorText"
+        android:textOff="Not visible"
+        android:textOn="Visible"
+        app:layout_constraintBottom_toBottomOf="@+id/iv_bg_weightbearing3"
+        app:layout_constraintStart_toStartOf="@+id/crutch_stick"
+        app:layout_constraintTop_toTopOf="@+id/iv_bg_weightbearing3" />
+
+    <ToggleButton
+        android:id="@+id/btn_visual"
+        style="@style/AppTheme"
+        android:layout_width="80dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:background="@color/colorMenutext"
+        android:checked="true"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+        android:textColor="@color/colorText"
+        android:textOff="GRAPH SIMPLE"
+        android:textOn="GRAPH COMPLETE"
+        app:layout_constraintBottom_toBottomOf="@+id/iv_bg_weightbearing3"
+        app:layout_constraintEnd_toStartOf="@+id/btn_datashow"
+        app:layout_constraintTop_toTopOf="@+id/iv_bg_weightbearing3" />
+
+    <TextView
+        android:id="@+id/tv_limb4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:text="Profile"
+        android:textColor="@color/colorAccent"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/iv_bg_weightbearing4"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/iv_bg_weightbearing4" />
+
+    <TextView
+        android:id="@+id/tv_limb5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:text="Message"
+        android:textColor="@color/colorAccent"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/iv_bg_weightbearing5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/iv_bg_weightbearing5" />
+
+    <ToggleButton
+        android:id="@+id/btn_voice"
+        android:layout_width="80dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:background="@color/colorMenutext"
+        android:checked="true"
+        android:fontFamily="sans-serif"
+        android:textColor="@color/colorText"
+        android:textOff="Voice"
+        android:textOn="Voice"
+        app:layout_constraintBottom_toBottomOf="@+id/iv_bg_weightbearing2"
+        app:layout_constraintEnd_toStartOf="@+id/btn_tones"
+        app:layout_constraintTop_toTopOf="@+id/iv_bg_weightbearing2" />
+
+    <ToggleButton
+        android:id="@+id/btn_tones"
+        android:layout_width="80dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:background="@color/colorMenutext"
+        android:checked="true"
+        android:fontFamily="sans-serif"
+        android:textColor="@color/colorText"
+        android:textOff="Tones"
+        android:textOn="Tones"
+        app:layout_constraintBottom_toBottomOf="@+id/iv_bg_weightbearing2"
+        app:layout_constraintEnd_toStartOf="@+id/btn_vibrations"
+        app:layout_constraintTop_toTopOf="@+id/iv_bg_weightbearing2" />
+
+    <ToggleButton
+        android:id="@+id/btn_vibrations"
+        android:layout_width="80dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:background="@color/colorMenutext"
+        android:checked="true"
+        android:fontFamily="sans-serif"
+        android:textColor="@color/colorText"
+        android:textOff="Vibrations"
+        android:textOn="Vibrations"
+        app:layout_constraintBottom_toBottomOf="@+id/iv_bg_weightbearing2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/iv_bg_weightbearing2"
+        app:layout_constraintVertical_bias="0.0" />
+
+
+</android.support.constraint.ConstraintLayout>
