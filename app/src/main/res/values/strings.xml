@@ -42,4 +42,15 @@
     <string name="right">Right</string>
     <string name="crutch">Crutch</string>
     <string name="stick">Stick</string>
+    <string name="voice">Voice</string>
+    <string name="tones">Tones</string>
+    <string name="vibrations">Vibrations</string>
+    <string name="graphsimpple">Graph simple</string>
+    <string name="graphcomplete">Graph complete</string>
+    <string name="visible">Visible</string>
+    <string name="invisible">Invisible</string>
+    <string name="mess">Messege</string>
+    <string name="exercises">Exercises</string>
+    <string name="data">Data</string>
+    <string name="profile">Profile</string>
 </resources>
