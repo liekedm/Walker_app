@@ -32,6 +32,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
+import java.io.BufferedWriter;
+import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -99,6 +101,7 @@ public class exercisespt1 extends AppCompatActivity {
     int timer_offrhythm = 30;
     int timer_feedback = 10;
 
+    boolean handler_running = false;
     boolean newstart;
 
 
@@ -139,13 +142,14 @@ public class exercisespt1 extends AppCompatActivity {
 
         SharedPreferences sp = getSharedPreferences("sharedprefs", Activity.MODE_PRIVATE);
         old_average_aid = sp.getInt(average_aid, 15);
-        old_average_step = sp.getInt(average_step, 15);
+        old_average_step = sp.getInt(average_step, 25);
 
 
         BTHandler1 = new Handler() {
             public void handleMessage(android.os.Message msg) {
                 if (msg.what == MESSAGE_READ) {
                     try {
+                        handler_running = true;
                         readMessage = new String((byte[]) msg.obj, "US-ASCII");
                         practice();
                     } catch (UnsupportedEncodingException e) {
@@ -153,6 +157,8 @@ public class exercisespt1 extends AppCompatActivity {
                     }
                     TextView input1 = findViewById(R.id.input1);
                     input1.setText(readMessage);
+                } else {
+                    handler_running = false;
                 }
             }
         };
@@ -170,6 +176,7 @@ public class exercisespt1 extends AppCompatActivity {
         if (ex_1_start||ex_2_start||ex_3_start){
             time_ex++; // timer to see how long the exercise is been going to determine fase
             if (newstart){
+                Toast.makeText(getApplicationContext(), "newstart", Toast.LENGTH_SHORT).show();
                 Context context = getApplicationContext();
                 writedatatofile(context);
                 newstart = false;
@@ -288,16 +295,20 @@ public class exercisespt1 extends AppCompatActivity {
     protected void writedatatofile(Context context){
         try
         {
-            OutputStreamWriter outputStreamWriter = new OutputStreamWriter(context.openFileOutput("data_log.txt", Context.MODE_APPEND));
+            OutputStreamWriter outputStreamWriter = new OutputStreamWriter(context.openFileOutput("data.txt", Context.MODE_APPEND));
             String data;
+            Calendar calender = Calendar.getInstance();
+            SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm");
             if (newstart){
-                data = "Exersice started" + "\n" + "t.s a.s t.a a.a cnst" + "\n";
+                String date_time = dateFormat.format(calender.getTime());
+                data = (date_time + "Exersice started " + "\n" + "t.s a.s t.a a.a cnst " + "\n");
             } else {
                 data = (Integer.toString(time_step)+"  "+Integer.toString(new_average_step)+"  "+Integer.toString(time_footaid)+"  "+Integer.toString(new_average_aid)+"  "+Boolean.toString(rhythmconsistent)+"\n");
             }
-            outputStreamWriter.append(data);
-            outputStreamWriter.append("\n\r");
-            outputStreamWriter.close();
+            BufferedWriter writer = new BufferedWriter(outputStreamWriter);
+            writer.write(data);
+            writer.newLine();
+            writer.close();
             Toast.makeText(this, "Data has been written to File", Toast.LENGTH_SHORT).show();
         }
         catch(IOException e) {
@@ -361,55 +372,71 @@ public class exercisespt1 extends AppCompatActivity {
     }
 
     protected void startexercises() {
-        ToggleButton btn_ex_1 = findViewById(R.id.btn_ex_1);;
+        final ToggleButton btn_ex_1 = findViewById(R.id.btn_ex_1);;
         btn_ex_1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (ex_1) {
-                    Toast.makeText(getApplicationContext(),"Exercise 1 stopped",Toast.LENGTH_SHORT).show(); ex_1_start = false;
+                if (!myBluetoothAdapter.isEnabled()||!handler_running) { //check if bluetooth is on and if there is a connection, if there isn't give warning and don't start exercise
+                    Toast.makeText(getApplicationContext(), "No bluetooth connection", Toast.LENGTH_SHORT).show();
+                    btn_ex_1.setChecked(false);
+                } else if (ex_1) {
+                    Toast.makeText(getApplicationContext(),"Exercise 1 stopped",Toast.LENGTH_SHORT).show();
+                    ex_1_start = false;
+                    ex_1 = !ex_1;
                     resetvalue();
                 } else {
-                    if(!myBluetoothAdapter.isEnabled()) {
-                        Toast.makeText(getApplicationContext(),"Turn on bluetooth",Toast.LENGTH_SHORT).show(); ex_1_start = true;}
-                    else {Toast.makeText(getApplicationContext(),"Exercise 1 starts in 1 minute",Toast.LENGTH_SHORT).show(); ex_1_start = true; newstart = true;}
+                    Toast.makeText(getApplicationContext(),"Exercise 1 starts in 1 minute",Toast.LENGTH_SHORT).show();
+                    ex_1_start = true;
+                    ex_1 = !ex_1;
+                    newstart = true;
                 }
-                ex_1 = !ex_1;
                 SharedPreferences sp = getSharedPreferences("sharedprefs", Activity.MODE_PRIVATE);
                 SharedPreferences.Editor editor = sp.edit();
                 editor.putBoolean("ex_1_status",  ex_1);
                 editor.apply();
             }
         });
-        ToggleButton btn_ex_2 = findViewById(R.id.btn_ex_2);
+        final ToggleButton btn_ex_2 = findViewById(R.id.btn_ex_2);
         btn_ex_2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (ex_2) {
-                    Toast.makeText(getApplicationContext(),"Exercise 2 stopped",Toast.LENGTH_SHORT).show(); ex_2_start = false;
+                if (!myBluetoothAdapter.isEnabled()||!handler_running) { //check if bluetooth is on and if there is a connection, if there isn't give warning and don't start exercise
+                    Toast.makeText(getApplicationContext(), "No bluetooth connection", Toast.LENGTH_SHORT).show();
+                    btn_ex_2.setChecked(false);
+                } else if (ex_2) {
+                    Toast.makeText(getApplicationContext(),"Exercise 2 stopped",Toast.LENGTH_SHORT).show();
+                    ex_2_start = false;
+                    ex_2 = !ex_2;
                     resetvalue();
                 } else {
-                    if(!myBluetoothAdapter.isEnabled()) {
-                        Toast.makeText(getApplicationContext(),"Turn on bluetooth",Toast.LENGTH_SHORT).show(); ex_2_start = true;}
-                    else {Toast.makeText(getApplicationContext(),"Exercise 2 starts in 1 minute",Toast.LENGTH_SHORT).show(); ex_2_start = true; newstart = true;}
+                    Toast.makeText(getApplicationContext(),"Exercise 2 starts in 1 minute",Toast.LENGTH_SHORT).show();
+                    ex_2_start = true;
+                    ex_2 = !ex_2;
+                    newstart = true;
                 }
-                ex_2 = !ex_2;
                 SharedPreferences sp = getSharedPreferences("sharedprefs", Activity.MODE_PRIVATE);
                 SharedPreferences.Editor editor = sp.edit();
                 editor.putBoolean("ex_2_status",  ex_2);
                 editor.apply();
             }
         });
-        ToggleButton btn_ex_3 = findViewById(R.id.btn_ex_3);
+        final ToggleButton btn_ex_3 = findViewById(R.id.btn_ex_3);
         btn_ex_3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (ex_3) {
-                    Toast.makeText(getApplicationContext(),"Exercise 3 stopped",Toast.LENGTH_SHORT).show(); ex_3_start = false;
+                if (!myBluetoothAdapter.isEnabled()||!handler_running) { //check if bluetooth is on and if there is a connection, if there isn't give warning and don't start exercise
+                    Toast.makeText(getApplicationContext(), "No bluetooth connection", Toast.LENGTH_SHORT).show();
+                    btn_ex_3.setChecked(false);
+                } else if (ex_3) {
+                    Toast.makeText(getApplicationContext(),"Exercise 3 stopped",Toast.LENGTH_SHORT).show();
+                    ex_3_start = false;
+                    ex_3 = !ex_3;
                     resetvalue();
                 } else {
-                    if(!myBluetoothAdapter.isEnabled()) {
-                        Toast.makeText(getApplicationContext(),"Turn on bluetooth",Toast.LENGTH_SHORT).show(); ex_3_start = true;}
-                    else{ Toast.makeText(getApplicationContext(),"Exercise 3 starts in 1 minute",Toast.LENGTH_SHORT).show(); ex_3_start = true;newstart = true;}
+                    Toast.makeText(getApplicationContext(),"Exercise 3 starts in 1 minute",Toast.LENGTH_SHORT).show();
+                    ex_3_start = true;
+                    ex_3 = !ex_3;
+                    newstart = true;
                 }
                 ex_3 = !ex_3;
                 SharedPreferences sp = getSharedPreferences("sharedprefs", Activity.MODE_PRIVATE);
@@ -513,7 +540,7 @@ public class exercisespt1 extends AppCompatActivity {
                     BTSocket2 = createBluetoothSocket2(device2);
                 } catch (IOException e) {
                     fail = true;
-                    Toast.makeText(getBaseContext(), "Socket2 creation failed", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(getBaseContext(), "Socket2 creation failed", Toast.LENGTH_SHORT).show();
                 }
                 // Establish the Bluetooth socket connection.
                 try {
@@ -561,14 +588,12 @@ public class exercisespt1 extends AppCompatActivity {
     }
 
     private class ConnectedThread1 extends Thread {
-        private final BluetoothSocket mmSocket1;
+        final BluetoothSocket mmSocket1;
         private final InputStream mmInStream1;
 
         public ConnectedThread1(BluetoothSocket socket1) {
             mmSocket1 = socket1;
             InputStream tmpIn = null;
-            // Get the input and output streams, using temp objects because
-            // member streams are final
             try {
                 tmpIn = socket1.getInputStream();
             } catch (IOException e) { }
@@ -600,20 +625,17 @@ public class exercisespt1 extends AppCompatActivity {
     }
 
     private class ConnectedThread2 extends Thread {
-        private final BluetoothSocket mmSocket2;
+        final BluetoothSocket mmSocket2;
         private final InputStream mmInStream2;
 
         public ConnectedThread2(BluetoothSocket socket2) {
             mmSocket2 = socket2;
             InputStream tmpIn = null;
-            // Get the input and output streams, using temp objects because
-            // member streams are final
             try {
                 tmpIn = socket2.getInputStream();
             } catch (IOException e) { }
             mmInStream2 = tmpIn;
         }
-
         public void run() {
             byte[] buffer = new byte[1024];  // buffer store for the stream
             int bytes; // bytes returned from read()

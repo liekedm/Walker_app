@@ -23,6 +23,7 @@
 
     <include
         layout="@layout/bottommenu"
+        android:layout_marginStart="8dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -208,6 +209,7 @@
         android:layout_marginStart="60dp"
         android:layout_marginTop="24dp"
         android:text="average"
+        android:visibility="invisible"
         app:layout_constraintStart_toEndOf="@+id/input1"
         app:layout_constraintTop_toBottomOf="@+id/iv_bg_exercise3" />
 
@@ -218,6 +220,7 @@
         android:layout_marginStart="60dp"
         android:layout_marginTop="16dp"
         android:text="average"
+        android:visibility="invisible"
         app:layout_constraintStart_toEndOf="@+id/input1"
         app:layout_constraintTop_toBottomOf="@+id/tvaverage" />
 
@@ -229,6 +232,7 @@
         android:layout_marginTop="8dp"
         android:layout_marginBottom="8dp"
         android:text="timer"
+        android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="@+id/tvaverageaid"
         app:layout_constraintStart_toEndOf="@+id/tvaverage"
         app:layout_constraintTop_toTopOf="@+id/tvaverage" />
@@ -239,6 +243,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:text="extime"
+        android:visibility="invisible"
         app:layout_constraintStart_toStartOf="@+id/input1"
         app:layout_constraintTop_toBottomOf="@+id/input1" />
 
@@ -248,6 +253,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:text="r.timer"
+        android:visibility="invisible"
         app:layout_constraintStart_toStartOf="@+id/tvaverage"
         app:layout_constraintTop_toBottomOf="@+id/tvaverageaid" />
 
@@ -257,6 +263,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
         android:text="or."
+        android:visibility="invisible"
         app:layout_constraintStart_toEndOf="@+id/tvoffrhythmtimer"
         app:layout_constraintTop_toTopOf="@+id/tvoffrhythmtimer" />
 
@@ -266,6 +273,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
         android:text="f.timer"
+        android:visibility="invisible"
         app:layout_constraintStart_toEndOf="@+id/tvoffrhythm"
         app:layout_constraintTop_toTopOf="@+id/tvoffrhythm" />
 
