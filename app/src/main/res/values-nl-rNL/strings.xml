@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Loophulp</string>
+    <string name="title_1">Oefeningen</string>
+    <string name="title_2">Data</string>
+    <string name="title_3">Profiel</string>
+    <string name="on">AAN</string>
+    <string name="off">UIT</string>
+    <string name="login">Log in</string>
+    <string name="name">Naam</string>
+    <string name="Password">Wachtwoord</string>
+    <string name="bluetooth">Bluetooth</string>
+    <string name="list">Gekoppelde apparaten</string>
+    <string name="found">Ondek apparaten</string>
+    <string name="connected">Niet verbonden</string>
+    <string name="infoexercise">Loop op je persoonlijke ritme</string>
+    <string name="infoexercise1">Tonen</string>
+    <string name="infoexercise2">Stem</string>
+    <string name="infoexercise3">Trillingen</string>
+    <string name="empty">" "</string>
+    <string name="Walkinggait">Gebruikte loop methode</string>
+    <string name="gaitdata">3-punts loop</string>
+    <string name="limb">Aangedane been</string>
+    <string name="walkingaid">Loop methode</string>
+    <string name="nametherapist">Naam therapeut</string>
+    <string name="messege">Bericht van therapeut</string>
+    <string name="left">Links</string>
+    <string name="right">Rechts</string>
+    <string name="crutch">Kruk</string>
+    <string name="stick">Stok</string>
+    <string name="voice">Stem</string>
+    <string name="tones">Tonen</string>
+    <string name="vibrations">Trillingen</string>
+    <string name="graphcomplete">Compleet</string>
+    <string name="visible">Zichtbaar</string>
+    <string name="invisible">Verborgen</string>
+    <string name="mess">Bericht</string>
+    <string name="exercises">Oefeningen</string>
+    <string name="data">Data</string>
+    <string name="profile">Profiel</string>
+    <string name="graphsimpple">Basis</string>
+</resources>

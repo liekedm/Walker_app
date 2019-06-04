@@ -6,6 +6,22 @@
     android:layout_height="match_parent"
     tools:context=".login">
 
+    <ToggleButton
+        android:id="@+id/btn_language"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:background="@color/colorMenutext"
+        android:checked="true"
+        android:fontFamily="sans-serif"
+        android:textColor="@color/colorText"
+        android:textOff="English"
+        android:textOn="Nederlands"
+        app:layout_constraintBottom_toTopOf="@+id/btn_login"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.461"
+        app:layout_constraintStart_toStartOf="parent" />
+
     <ImageView
         android:id="@+id/imageView4"
         android:layout_width="match_parent"

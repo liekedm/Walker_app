@@ -1,56 +1,53 @@
 <resources>
 
     <!-- OverAll -->
-    <string name="app_name">Walker</string>
-    <string name="title_1">Exercises</string>
-    <string name="title_2">Data</string>
-    <string name="title_3">Profile</string>
-    <string name="on">ON</string>
-    <string name="off">OFF</string>
+    <string name="app_name" translatable="true">Walker</string>
+    <string name="title_1" translatable="true">Exercises</string>
+    <string name="title_2" translatable="true">Data</string>
+    <string name="title_3" translatable="true">Profile</string>
+    <string name="on" translatable="true">ON</string>
+    <string name="off" translatable="true">OFF</string>
 
     <!-- Login -->
-    <string name="login">login</string>
-    <string name="name">Name</string>
-    <string name="Password">Password</string>
+    <string name="login" translatable="true">log in</string>
+    <string name="name" translatable="true">Name</string>
+    <string name="Password" translatable="true">Password</string>
 
     <!-- Bluetooth -->
-    <string name="bluetooth">Bluetooth</string>
-    <string name="list">Paired devices</string>
-    <string name="found">Discover devices</string>
-    <string name="connected">Not connected</string>
+    <string name="bluetooth" translatable="true">Bluetooth</string>
+    <string name="list" translatable="true">Paired devices</string>
+    <string name="found" translatable="true">Discover devices</string>
+    <string name="connected" translatable="true">Not connected</string>
 
     <!-- Exercises -->
-    <string name="exercise1">Exersice 1</string>
-    <string name="exercise2">Exersice 2</string>
-    <string name="exercise3">Exersice 3</string>
-    <string name="infoexercise">Walk on your personal rhythm</string>
-    <string name="infoexercise1">Tones</string>
-    <string name="infoexercise2">Voice</string>
-    <string name="infoexercise3">Vibrations</string>
+    <string name="infoexercise" translatable="true">Walk on your personal rhythm</string>
+    <string name="infoexercise1" translatable="true">Tones</string>
+    <string name="infoexercise2" translatable="true">Voice</string>
+    <string name="infoexercise3" translatable="true">Vibrations</string>
     <string name="empty">  </string>
 
     <!-- Data -->
-    <string name="Walkinggait">Used gait method</string>
-    <string name="gaitdata">3-points gait</string>
+    <string name="Walkinggait" translatable="true">Used gait method</string>
+    <string name="gaitdata" translatable="true">3-points gait</string>
 
     <!-- Profile -->
-    <string name="limb">Effected Limb</string>
-    <string name="walkingaid">Walking-aid</string>
-    <string name="nametherapist">Name therapist</string>
-    <string name="messege">Messege from therapist</string>
-    <string name="left">Left</string>
-    <string name="right">Right</string>
-    <string name="crutch">Crutch</string>
-    <string name="stick">Stick</string>
-    <string name="voice">Voice</string>
-    <string name="tones">Tones</string>
-    <string name="vibrations">Vibrations</string>
-    <string name="graphsimpple">Graph simple</string>
-    <string name="graphcomplete">Graph complete</string>
-    <string name="visible">Visible</string>
-    <string name="invisible">Invisible</string>
-    <string name="mess">Messege</string>
-    <string name="exercises">Exercises</string>
-    <string name="data">Data</string>
-    <string name="profile">Profile</string>
+    <string name="limb" translatable="true">Effected Limb</string>
+    <string name="walkingaid" translatable="true">Walking-aid</string>
+    <string name="nametherapist" translatable="true">Name therapist</string>
+    <string name="messege" translatable="true">Messege from therapist</string>
+    <string name="left" translatable="true">Left</string>
+    <string name="right" translatable="true">Right</string>
+    <string name="crutch" translatable="true">Crutch</string>
+    <string name="stick" translatable="true">Stick</string>
+    <string name="voice" translatable="true">Voice</string>
+    <string name="tones" translatable="true">Tones</string>
+    <string name="vibrations" translatable="true">Vibrations</string>
+    <string name="graphsimpple" translatable="true">Basis</string>
+    <string name="graphcomplete" translatable="true">Complete</string>
+    <string name="visible" translatable="true">Visible</string>
+    <string name="invisible" translatable="true">Invisible</string>
+    <string name="mess" translatable="true">Messege</string>
+    <string name="exercises" translatable="true">Exercises</string>
+    <string name="data" translatable="true">Data</string>
+    <string name="profile" translatable="true">Profile</string>
 </resources>

@@ -16,25 +16,25 @@
     <!-- Weightbearing -->
 
     <ImageView
-        android:id="@+id/imageView3"
+        android:id="@+id/GraphSimple1"
         android:layout_width="match_parent"
         android:layout_height="220dp"
         android:layout_marginTop="150dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/graphsimple2" />
+        app:srcCompat="@drawable/graphsimple1_pt" />
 
     <ImageView
-        android:id="@+id/imageView6"
+        android:id="@+id/GraphSimple2"
         android:layout_width="match_parent"
         android:layout_height="220dp"
         android:layout_marginTop="16dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView3"
-        app:srcCompat="@drawable/graphsimple1" />
+        app:layout_constraintTop_toBottomOf="@+id/GraphSimple1"
+        app:srcCompat="@drawable/graphsimple2_pt" />
 
 
 </android.support.constraint.ConstraintLayout>
