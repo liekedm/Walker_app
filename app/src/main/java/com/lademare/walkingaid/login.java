@@ -1,6 +1,7 @@
 package com.lademare.walkingaid;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
@@ -37,7 +38,7 @@ public class login extends AppCompatActivity {
 
         btn_language = findViewById(R.id.btn_language);
         SharedPreferences sp = getSharedPreferences("sharedprefs", Activity.MODE_PRIVATE);
-        if ((sp.getString(languagesave, "en").equals("nl"))) {
+        if ((sp.getString(languagesave, "nl").equals("nl"))) {
             btn_language.setChecked(false);
         } else {
             btn_language.setChecked(true);
@@ -74,11 +75,7 @@ public class login extends AppCompatActivity {
                 } else if (name.equals("kate") && password.equals("kate")){
                 startActivity(new Intent(login.this, choosepatient.class));
                 } else {
-                    if (language.equals("nl")){
-                        Toast.makeText(getApplicationContext(), "Naam of wachtwoord ongeldig", Toast.LENGTH_SHORT).show();
-                    } else {
-                        Toast.makeText(getApplicationContext(), "Invalid name or password", Toast.LENGTH_SHORT).show();
-                    }
+                    Toast.makeText(getApplicationContext(),getResources().getString(R.string.toast_loginfailed),Toast.LENGTH_SHORT).show();;
                 }
             }
         });

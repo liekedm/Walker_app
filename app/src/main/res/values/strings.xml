@@ -49,5 +49,16 @@
     <string name="mess" translatable="true">Messege</string>
     <string name="exercises" translatable="true">Exercises</string>
     <string name="data" translatable="true">Data</string>
-    <string name="profile" translatable="true">Profile</string>
+    <string name="profile">Profile</string>
+
+    <!-- Toasts -->
+    <string name="toast_bluetoothdisabled" translatable="true">Bluetooth disabled</string>
+    <string name="toast_bluetoothnotsupported" translatable="true">Bluetooth not supported</string>
+    <string name="toast_bluetoothnenabled">Bluetooth enabled</string>
+    <string name="toast_bluetoothnenablingcancelled" translatable="true">Bluetooth enabling cancelled</string>
+    <string name="toast_nobluetoothconnection" translatable="true">No bluetooth connection</string>
+    <string name="toast_exstart" translatable="true">Exercise starts in 1 minute</string>
+    <string name="toast_exstop" translatable="true">Exercise stopped</string>
+    <string name="toast_loginfailed" translatable="true">Name or password incorrect</string>
+
 </resources>

@@ -32,7 +32,6 @@
         <activity android:name=".exercisespt1" />
         <activity android:name=".profiletp1" />
         <activity android:name=".datatp1" />
-        <activity android:name=".exercisestp1" />
     </application>
 
 </manifest>

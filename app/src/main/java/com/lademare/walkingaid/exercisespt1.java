@@ -16,11 +16,8 @@ import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.graphics.Color;
 import android.hardware.SensorManager;
-import android.media.AudioManager;
 import android.media.MediaPlayer;
-import android.media.ToneGenerator;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Vibrator;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -28,26 +25,18 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
-
 import java.io.BufferedWriter;
-import java.io.PrintWriter;
-import java.nio.file.Files;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
-
-import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Method;
-import java.nio.charset.Charset;
-import java.util.List;
 import java.util.UUID;
 import android.os.Handler;
 
@@ -60,9 +49,6 @@ public class exercisespt1 extends AppCompatActivity {
     boolean ex_1_start = false;
     boolean ex_2_start = false;
     boolean ex_3_start = false;
-    public static final String ex_1_status = "ex_1_status"; // status is saved in shared preferences to be able to switch activities
-    public static final String ex_2_status = "ex_2_status";
-    public static final String ex_3_status = "ex_3_status";
     public static final String average_aid = "old_average_aid";
     public static final String average_step = "old_average_step";
 
@@ -103,7 +89,10 @@ public class exercisespt1 extends AppCompatActivity {
 
     boolean handler_running = false;
     boolean newstart;
+    boolean begin = false;
 
+    String language;
+    String languagesave = "languagesave";
 
     @SuppressLint("HandlerLeak")
     @Override
@@ -118,8 +107,14 @@ public class exercisespt1 extends AppCompatActivity {
         myBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
         menu();
-        checkexercisestatus();
         startexercises();
+
+        SharedPreferences sp = getSharedPreferences("sharedprefs", Activity.MODE_PRIVATE);
+        if ((sp.getString(languagesave, "en").equals("nl"))) {
+            language = "nl";
+        } else {
+            language = "en";
+        }
 
         ImageButton btn_bluetooth = findViewById(R.id.btn_bluetooth);
         TextView input1 = findViewById(R.id.input1);
@@ -140,7 +135,6 @@ public class exercisespt1 extends AppCompatActivity {
             }
         });
 
-        SharedPreferences sp = getSharedPreferences("sharedprefs", Activity.MODE_PRIVATE);
         old_average_aid = sp.getInt(average_aid, 15);
         old_average_step = sp.getInt(average_step, 25);
 
@@ -176,7 +170,6 @@ public class exercisespt1 extends AppCompatActivity {
         if (ex_1_start||ex_2_start||ex_3_start){
             time_ex++; // timer to see how long the exercise is been going to determine fase
             if (newstart){
-                Toast.makeText(getApplicationContext(), "newstart", Toast.LENGTH_SHORT).show();
                 Context context = getApplicationContext();
                 writedatatofile(context);
                 newstart = false;
@@ -190,21 +183,21 @@ public class exercisespt1 extends AppCompatActivity {
                 if (result.equals("foot")) {
                     // average_step
                     new_measurement_step = time_step;
-                    if ((new_measurement_step / old_average_step) > 3) { // don't take outliers into account, can be caused by extern source
+                    if ((new_measurement_step / old_average_step) > 3) { // don't take outliers into account, can be caused by an external source
                         new_measurement_step = old_average_step;
-                        Toast.makeText(getApplicationContext(), "outlier", Toast.LENGTH_SHORT).show();
                     }
-                    time_step = 0;
                     new_average_step = ((9 * old_average_step + new_measurement_step) / 10); // approximate average, last measurements have most impact
                     old_average_step = new_average_step;
                     // average_aid
                     new_measurement_aid = time_footaid;
                     if ((new_measurement_aid/old_average_aid)>3){ // don't take outliers into account, these can be caused by extern source, like waiting to cross the road
                         new_measurement_aid = old_average_aid;
-                        Toast.makeText(getApplicationContext(),"outlier",Toast.LENGTH_SHORT).show();
                     }
                     new_average_aid = ((9 * old_average_aid + new_measurement_aid) / 10); // approximate average, last measurements have most impact
                     old_average_aid = new_average_aid;
+                    Context context = getApplicationContext();
+                    writedatatofile(context);
+                    time_step = 0;
                 }
 
                 if (new_average_aid < 3){
@@ -214,15 +207,20 @@ public class exercisespt1 extends AppCompatActivity {
                 }
             }
 
-            if (time_ex > 100) { // give feedback after some data is collected to have some valid input
-
-                if (result.equals("foot")){
-                    Context context = getApplicationContext();
-                    writedatatofile(context);
+            if (time_ex > 100) {
+                if (result.equals("foot")){ //start with a step, to match the feedback with foot placement
+                    begin = true;
                 }
+            }
+            if (time_ex > 100 && begin) { // give feedback after some data is collected to have some valid input
+
+//                if (result.equals("foot")){
+//                    Context context = getApplicationContext();
+//                    writedatatofile(context);
+//                }
 
                 timer_offrhythm--;
-                if (((new_measurement_step / old_average_step) < 0.9) || ((new_measurement_step / old_average_step) > 1.1) && (result.equals("heel-strike"))) { // check if the new step is in rhythm or not
+                if ((result.equals("foot")) && ((new_measurement_step / old_average_step) < 0.9) || ((new_measurement_step / old_average_step) > 1.1)) { // check if the new step is in rhythm or not
                     timer_offrhythm = 30; // check is there are multible steps not in rhythm in a certain amount of time
                     offrhythm = offrhythm + 1;
                 }
@@ -233,6 +231,7 @@ public class exercisespt1 extends AppCompatActivity {
                 if (offrhythm >= 3) {
                     rhythmconsistent = false;
                 }
+
                 timer_step++;
 
                 if (timer_step >= new_average_step) { // make sounds in rhythm of average
@@ -248,8 +247,13 @@ public class exercisespt1 extends AppCompatActivity {
                             biep1.start();
                         }
                         if (ex_2_start) {
-                            final MediaPlayer foot = MediaPlayer.create(this, R.raw.foot);
-                            foot.start();
+                            if (language.equals("nl")){
+                                final MediaPlayer voet = MediaPlayer.create(this, R.raw.voet);
+                                voet.start();;
+                            } else {
+                                final MediaPlayer foot = MediaPlayer.create(this, R.raw.foot);
+                                foot.start();;
+                            }
                         }
                         if (ex_3_start){
                             Vibrator vibrator = (Vibrator)getSystemService(Context.VIBRATOR_SERVICE);
@@ -267,11 +271,21 @@ public class exercisespt1 extends AppCompatActivity {
                         if (ex_2_start) {
                             SharedPreferences sp = getSharedPreferences("sharedprefs", Activity.MODE_PRIVATE);
                             if ((sp.getString(walkingaid, "Stick").equals("Crutch"))) {
-                                final MediaPlayer crutch = MediaPlayer.create(this, R.raw.crutch);
-                                crutch.start();
+                                if (language.equals("nl")){
+                                    final MediaPlayer kruk = MediaPlayer.create(this, R.raw.kruk);
+                                    kruk.start();;
+                                } else {
+                                    final MediaPlayer crutch = MediaPlayer.create(this, R.raw.crutch);
+                                    crutch.start();
+                                }
                             } else {
-                                final MediaPlayer stick = MediaPlayer.create(this, R.raw.stick);
-                                stick.start();
+                                if (language.equals("nl")){
+                                    final MediaPlayer stok = MediaPlayer.create(this, R.raw.stok);
+                                    stok.start();;
+                                } else {
+                                    final MediaPlayer stick = MediaPlayer.create(this, R.raw.stick);
+                                    stick.start();
+                                }
                             }
                         }
                         if (ex_3_start){
@@ -295,21 +309,20 @@ public class exercisespt1 extends AppCompatActivity {
     protected void writedatatofile(Context context){
         try
         {
-            OutputStreamWriter outputStreamWriter = new OutputStreamWriter(context.openFileOutput("data.txt", Context.MODE_APPEND));
+            OutputStreamWriter outputStreamWriter = new OutputStreamWriter(context.openFileOutput("logdata.txt", Context.MODE_APPEND));
             String data;
             Calendar calender = Calendar.getInstance();
             SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm");
             if (newstart){
                 String date_time = dateFormat.format(calender.getTime());
-                data = (date_time + "Exersice started " + "\n" + "t.s a.s t.a a.a cnst " + "\n");
+                data = (date_time + "n.l." + "Exersice started " + "n.l." + "ti.s av.s ti.a va.a cnst " + "n.l.");
             } else {
-                data = (Integer.toString(time_step)+"  "+Integer.toString(new_average_step)+"  "+Integer.toString(time_footaid)+"  "+Integer.toString(new_average_aid)+"  "+Boolean.toString(rhythmconsistent)+"\n");
+                data = (Integer.toString(time_step)+"  "+Integer.toString(new_average_step)+"  "+Integer.toString(time_footaid)+"  "+Integer.toString(new_average_aid)+"  "+Boolean.toString(rhythmconsistent)+"n.l.");
             }
             BufferedWriter writer = new BufferedWriter(outputStreamWriter);
             writer.write(data);
             writer.newLine();
             writer.close();
-            Toast.makeText(this, "Data has been written to File", Toast.LENGTH_SHORT).show();
         }
         catch(IOException e) {
             e.printStackTrace();
@@ -349,51 +362,25 @@ public class exercisespt1 extends AppCompatActivity {
         });
     }
 
-    protected void checkexercisestatus() {
-        SharedPreferences sp = getSharedPreferences("sharedprefs", Activity.MODE_PRIVATE);
-        ex_1 = sp.getBoolean(ex_1_status, false);
-        ex_2 = sp.getBoolean(ex_2_status, false);
-        ex_3 = sp.getBoolean(ex_3_status, false);
-        ToggleButton btn_ex_1 = findViewById(R.id.btn_ex_1);
-        if (ex_1){
-            btn_ex_1.setChecked(true);
-            ex_1 = true;
-        } else{ btn_ex_1.setChecked(false);}
-        ToggleButton btn_ex_2 = findViewById(R.id.btn_ex_2);
-        if (ex_2){
-            btn_ex_2.setChecked(true);
-            ex_2 = true;
-        } else{ btn_ex_2.setChecked(false);}
-        ToggleButton btn_ex_3 = findViewById(R.id.btn_ex_3);
-        if (ex_3){
-            btn_ex_3.setChecked(true);
-            ex_3 = true;
-        } else{ btn_ex_3.setChecked(false);}
-    }
-
     protected void startexercises() {
         final ToggleButton btn_ex_1 = findViewById(R.id.btn_ex_1);;
         btn_ex_1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (!myBluetoothAdapter.isEnabled()||!handler_running) { //check if bluetooth is on and if there is a connection, if there isn't give warning and don't start exercise
-                    Toast.makeText(getApplicationContext(), "No bluetooth connection", Toast.LENGTH_SHORT).show();
+                    Toast.makeText((getApplicationContext()),getResources().getString(R.string.toast_nobluetoothconnection),Toast.LENGTH_SHORT).show();
                     btn_ex_1.setChecked(false);
                 } else if (ex_1) {
-                    Toast.makeText(getApplicationContext(),"Exercise 1 stopped",Toast.LENGTH_SHORT).show();
+                    Toast.makeText((getApplicationContext()),getResources().getString(R.string.toast_exstop),Toast.LENGTH_SHORT).show();
                     ex_1_start = false;
                     ex_1 = !ex_1;
                     resetvalue();
                 } else {
-                    Toast.makeText(getApplicationContext(),"Exercise 1 starts in 1 minute",Toast.LENGTH_SHORT).show();
+                    Toast.makeText((getApplicationContext()),getResources().getString(R.string.toast_exstart),Toast.LENGTH_SHORT).show();
                     ex_1_start = true;
                     ex_1 = !ex_1;
                     newstart = true;
                 }
-                SharedPreferences sp = getSharedPreferences("sharedprefs", Activity.MODE_PRIVATE);
-                SharedPreferences.Editor editor = sp.edit();
-                editor.putBoolean("ex_1_status",  ex_1);
-                editor.apply();
             }
         });
         final ToggleButton btn_ex_2 = findViewById(R.id.btn_ex_2);
@@ -401,23 +388,19 @@ public class exercisespt1 extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if (!myBluetoothAdapter.isEnabled()||!handler_running) { //check if bluetooth is on and if there is a connection, if there isn't give warning and don't start exercise
-                    Toast.makeText(getApplicationContext(), "No bluetooth connection", Toast.LENGTH_SHORT).show();
+                    Toast.makeText((getApplicationContext()),getResources().getString(R.string.toast_nobluetoothconnection),Toast.LENGTH_SHORT).show();
                     btn_ex_2.setChecked(false);
                 } else if (ex_2) {
-                    Toast.makeText(getApplicationContext(),"Exercise 2 stopped",Toast.LENGTH_SHORT).show();
+                    Toast.makeText((getApplicationContext()),getResources().getString(R.string.toast_exstop),Toast.LENGTH_SHORT).show();;
                     ex_2_start = false;
                     ex_2 = !ex_2;
                     resetvalue();
                 } else {
-                    Toast.makeText(getApplicationContext(),"Exercise 2 starts in 1 minute",Toast.LENGTH_SHORT).show();
+                    Toast.makeText((getApplicationContext()),getResources().getString(R.string.toast_exstart),Toast.LENGTH_SHORT).show();
                     ex_2_start = true;
                     ex_2 = !ex_2;
                     newstart = true;
                 }
-                SharedPreferences sp = getSharedPreferences("sharedprefs", Activity.MODE_PRIVATE);
-                SharedPreferences.Editor editor = sp.edit();
-                editor.putBoolean("ex_2_status",  ex_2);
-                editor.apply();
             }
         });
         final ToggleButton btn_ex_3 = findViewById(R.id.btn_ex_3);
@@ -425,24 +408,20 @@ public class exercisespt1 extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if (!myBluetoothAdapter.isEnabled()||!handler_running) { //check if bluetooth is on and if there is a connection, if there isn't give warning and don't start exercise
-                    Toast.makeText(getApplicationContext(), "No bluetooth connection", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(),getResources().getString(R.string.toast_nobluetoothconnection),Toast.LENGTH_SHORT).show();
                     btn_ex_3.setChecked(false);
                 } else if (ex_3) {
-                    Toast.makeText(getApplicationContext(),"Exercise 3 stopped",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(),getResources().getString(R.string.toast_exstop),Toast.LENGTH_SHORT).show();;
                     ex_3_start = false;
                     ex_3 = !ex_3;
                     resetvalue();
                 } else {
-                    Toast.makeText(getApplicationContext(),"Exercise 3 starts in 1 minute",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(),getResources().getString(R.string.toast_exstart),Toast.LENGTH_SHORT).show();
                     ex_3_start = true;
                     ex_3 = !ex_3;
                     newstart = true;
                 }
                 ex_3 = !ex_3;
-                SharedPreferences sp = getSharedPreferences("sharedprefs", Activity.MODE_PRIVATE);
-                SharedPreferences.Editor editor = sp.edit();
-                editor.putBoolean("ex_3_status",  ex_3);
-                editor.apply();
             }
         });
     }
@@ -455,7 +434,6 @@ public class exercisespt1 extends AppCompatActivity {
         editor.putInt("average_step",  old_average_step);
         editor.apply();
     }
-
 
     /* code to enable bluetooth */
 
@@ -470,14 +448,14 @@ public class exercisespt1 extends AppCompatActivity {
         btEnablingIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
         requestCodeForEnable=1;
         if (myBluetoothAdapter==null){
-            Toast.makeText(getApplicationContext(),"Bluetooth not supported", Toast.LENGTH_LONG).show();
+            Toast.makeText((getApplicationContext()),getResources().getString(R.string.toast_bluetoothnotsupported),Toast.LENGTH_SHORT).show();
         } else {
             if (!myBluetoothAdapter.isEnabled()) {
                 startActivityForResult(btEnablingIntent, requestCodeForEnable);
             }
             if (myBluetoothAdapter.isEnabled()) {
                 myBluetoothAdapter.disable();
-                Toast.makeText(getApplicationContext(),"Bluetooth disabled",Toast.LENGTH_SHORT).show();
+                Toast.makeText((getApplicationContext()),getResources().getString(R.string.toast_bluetoothdisabled),Toast.LENGTH_SHORT).show();
                 TextView input1 = findViewById(R.id.input1); input1.setVisibility(View.INVISIBLE);
                 ImageButton btn_bluetooth = findViewById(R.id.btn_bluetooth); btn_bluetooth.setBackgroundColor(getResources().getColor(R.color.transparent));
             }
@@ -489,13 +467,13 @@ public class exercisespt1 extends AppCompatActivity {
         if(requestCode==requestCodeForEnable){
             ImageButton btn_bluetooth = findViewById(R.id.btn_bluetooth);
             if(resultCode==RESULT_OK){
-                Toast.makeText(getApplicationContext(),"Bluetooth enabled",Toast.LENGTH_SHORT).show();
+                Toast.makeText((getApplicationContext()),getResources().getString(R.string.toast_bluetoothnenabled),Toast.LENGTH_SHORT).show();
                 TextView input1 = findViewById(R.id.input1); input1.setVisibility(View.VISIBLE);
                 btn_bluetooth.setBackgroundColor(getResources().getColor(R.color.colorAccent));
                 createsocket();
             }
             else if(resultCode==RESULT_CANCELED){
-                Toast.makeText(getApplicationContext(),"Bluetooth enabling cancelled",Toast.LENGTH_SHORT).show();
+                Toast.makeText((getApplicationContext()),getResources().getString(R.string.toast_bluetoothnenablingcancelled),Toast.LENGTH_SHORT).show();
                 TextView input1 = findViewById(R.id.input1); input1.setVisibility(View.INVISIBLE);
                 btn_bluetooth.setBackgroundColor(getResources().getColor(R.color.transparent));
             }
@@ -512,7 +490,6 @@ public class exercisespt1 extends AppCompatActivity {
                     BTSocket1 = createBluetoothSocket1(device1);
                 } catch (IOException e) {
                     fail = true;
-                    Toast.makeText(getBaseContext(), "Socket1 creation failed", Toast.LENGTH_SHORT).show();
                 }
                 // Establish the Bluetooth socket connection.
                 try {
@@ -525,7 +502,6 @@ public class exercisespt1 extends AppCompatActivity {
                                 .sendToTarget();
                     } catch (IOException e2) {
                         //insert code to deal with this
-                        Toast.makeText(getBaseContext(), "Socket1 creation failed", Toast.LENGTH_SHORT).show();
                     }
                 }
                 if (!fail) {
@@ -540,7 +516,6 @@ public class exercisespt1 extends AppCompatActivity {
                     BTSocket2 = createBluetoothSocket2(device2);
                 } catch (IOException e) {
                     fail = true;
-                    //Toast.makeText(getBaseContext(), "Socket2 creation failed", Toast.LENGTH_SHORT).show();
                 }
                 // Establish the Bluetooth socket connection.
                 try {
@@ -553,7 +528,6 @@ public class exercisespt1 extends AppCompatActivity {
                                 .sendToTarget();
                     } catch (IOException e2) {
                         //insert code to deal with this
-                        Toast.makeText(getBaseContext(), "Socket2 creation failed", Toast.LENGTH_SHORT).show();
                     }
                 }
                 if (!fail) {

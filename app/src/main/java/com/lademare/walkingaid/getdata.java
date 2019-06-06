@@ -10,6 +10,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.BufferedReader;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -17,7 +18,7 @@ import java.io.InputStreamReader;
 
 public class getdata extends AppCompatActivity {
 
-    String fileName = "data.txt";
+    String fileName = "logdata.txt";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,7 +34,7 @@ public class getdata extends AppCompatActivity {
     }
 
     private String readFromFile(Context context, String fileName) {
-        String ret = " ";
+        String data = " ";
         try {
             InputStream inputStream = context.openFileInput(fileName);
             if (inputStream != null) {
@@ -42,17 +43,18 @@ public class getdata extends AppCompatActivity {
                 String receiveString;
                 StringBuilder stringBuilder = new StringBuilder();
                 while ((receiveString = bufferedReader.readLine()) != null) {
-                    Toast.makeText(this, "Data received", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(this, "Data received", Toast.LENGTH_SHORT).show();
                     stringBuilder.append(receiveString);
                 }
                 inputStream.close();
-                ret = stringBuilder.toString();
+                String incomming = stringBuilder.toString();
+                data = incomming.replaceAll("n.l.", System.getProperty ("line.separator"));
             }
         } catch (FileNotFoundException e) {
             Toast.makeText(this, "File not found", Toast.LENGTH_SHORT).show();
         } catch (IOException e) {
             Toast.makeText(this, "Can not read file", Toast.LENGTH_SHORT).show();
         }
-        return ret;
+        return data;
     }
 }

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Loophulp</string>
+    <string name="app_name">Walker</string>
     <string name="title_1">Oefeningen</string>
     <string name="title_2">Data</string>
     <string name="title_3">Profiel</string>
@@ -39,4 +39,12 @@
     <string name="data">Data</string>
     <string name="profile">Profiel</string>
     <string name="graphsimpple">Basis</string>
+    <string name="toast_bluetoothdisabled">Bluetooth uitgeschakelt</string>
+    <string name="toast_bluetoothnotsupported">Bluetooth niet ondersteund</string>
+    <string name="toast_bluetoothnenabled">Bluetooth verbonden</string>
+    <string name="toast_bluetoothnenablingcancelled">Bluetooth verbingen afgebroken</string>
+    <string name="toast_nobluetoothconnection">Geen bluetooth verbinding</string>
+    <string name="toast_exstart">Oefening begint in 1 minuut</string>
+    <string name="toast_exstop">Oefening gestopt</string>
+    <string name="toast_loginfailed">Naam of wachtwoord incorrect</string>
 </resources>
