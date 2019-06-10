@@ -135,7 +135,7 @@ public class exercisespt1 extends AppCompatActivity {
             }
         });
 
-        old_average_aid = sp.getInt(average_aid, 15);
+        old_average_aid = sp.getInt(average_aid, 15); // get values from last time exercise was done
         old_average_step = sp.getInt(average_step, 25);
 
 
@@ -144,7 +144,7 @@ public class exercisespt1 extends AppCompatActivity {
                 if (msg.what == MESSAGE_READ) {
                     try {
                         handler_running = true;
-                        readMessage = new String((byte[]) msg.obj, "US-ASCII");
+                        readMessage = new String((byte[]) msg.obj, "US-ASCII"); //Arduino uses ACSII
                         practice();
                     } catch (UnsupportedEncodingException e) {
                         e.printStackTrace();
@@ -156,177 +156,6 @@ public class exercisespt1 extends AppCompatActivity {
                 }
             }
         };
-    }
-
-    protected void practice() {
-        if (readMessage.contains("foot")){
-            result = "foot";
-        } else if (readMessage.contains("aid")){
-            result = "aid";
-        } else {
-            result = " ";
-        }
-
-        if (ex_1_start||ex_2_start||ex_3_start){
-            time_ex++; // timer to see how long the exercise is been going to determine fase
-            if (newstart){
-                Context context = getApplicationContext();
-                writedatatofile(context);
-                newstart = false;
-            }
-            if (time_ex > 50) { // start measuring after certain time to allow the user to store the phone away first
-                time_step++;
-                time_footaid++;
-                if (result.equals("aid")) {
-                    time_footaid = 0;
-                }
-                if (result.equals("foot")) {
-                    // average_step
-                    new_measurement_step = time_step;
-                    if ((new_measurement_step / old_average_step) > 3) { // don't take outliers into account, can be caused by an external source
-                        new_measurement_step = old_average_step;
-                    }
-                    new_average_step = ((9 * old_average_step + new_measurement_step) / 10); // approximate average, last measurements have most impact
-                    old_average_step = new_average_step;
-                    // average_aid
-                    new_measurement_aid = time_footaid;
-                    if ((new_measurement_aid/old_average_aid)>3){ // don't take outliers into account, these can be caused by extern source, like waiting to cross the road
-                        new_measurement_aid = old_average_aid;
-                    }
-                    new_average_aid = ((9 * old_average_aid + new_measurement_aid) / 10); // approximate average, last measurements have most impact
-                    old_average_aid = new_average_aid;
-                    Context context = getApplicationContext();
-                    writedatatofile(context);
-                    time_step = 0;
-                }
-
-                if (new_average_aid < 3){
-                    walkinggait = "2-point";
-                } else {
-                    walkinggait = "3-point";
-                }
-            }
-
-            if (time_ex > 100) {
-                if (result.equals("foot")){ //start with a step, to match the feedback with foot placement
-                    begin = true;
-                }
-            }
-            if (time_ex > 100 && begin) { // give feedback after some data is collected to have some valid input
-
-//                if (result.equals("foot")){
-//                    Context context = getApplicationContext();
-//                    writedatatofile(context);
-//                }
-
-                timer_offrhythm--;
-                if ((result.equals("foot")) && ((new_measurement_step / old_average_step) < 0.9) || ((new_measurement_step / old_average_step) > 1.1)) { // check if the new step is in rhythm or not
-                    timer_offrhythm = 30; // check is there are multible steps not in rhythm in a certain amount of time
-                    offrhythm = offrhythm + 1;
-                }
-                if (timer_offrhythm <= 0) {
-                    offrhythm = 0;
-                    timer_offrhythm = 30;
-                }
-                if (offrhythm >= 3) {
-                    rhythmconsistent = false;
-                }
-
-                timer_step++;
-
-                if (timer_step >= new_average_step) { // make sounds in rhythm of average
-                    timer_step = 0;
-                    if ((time_ex < 200) || (!rhythmconsistent)) { // give input in the beginning and when the rhythm is not constant
-                        timer_feedback--; // give input at least 10 times to get back in rhythm
-                        if (timer_feedback == 0){
-                            timer_feedback = 10;
-                            rhythmconsistent = true;
-                        }
-                        if (ex_1_start) {
-                            final MediaPlayer biep1 = MediaPlayer.create(this, R.raw.biep1);
-                            biep1.start();
-                        }
-                        if (ex_2_start) {
-                            if (language.equals("nl")){
-                                final MediaPlayer voet = MediaPlayer.create(this, R.raw.voet);
-                                voet.start();;
-                            } else {
-                                final MediaPlayer foot = MediaPlayer.create(this, R.raw.foot);
-                                foot.start();;
-                            }
-                        }
-                        if (ex_3_start){
-                            Vibrator vibrator = (Vibrator)getSystemService(Context.VIBRATOR_SERVICE);
-                            vibrator.vibrate(100);
-                        }
-                    }
-                }
-
-                if (timer_step == new_average_aid && walkinggait.equals("3-point")) { // make sounds in rhythm of average
-                    if ((time_ex < 200) || (!rhythmconsistent)) { // give input in the beginning and when the rhythm is not constant
-                        if (ex_1_start) {
-                            final MediaPlayer biep2 = MediaPlayer.create(this, R.raw.biep2);
-                            biep2.start();
-                        }
-                        if (ex_2_start) {
-                            SharedPreferences sp = getSharedPreferences("sharedprefs", Activity.MODE_PRIVATE);
-                            if ((sp.getString(walkingaid, "Stick").equals("Crutch"))) {
-                                if (language.equals("nl")){
-                                    final MediaPlayer kruk = MediaPlayer.create(this, R.raw.kruk);
-                                    kruk.start();;
-                                } else {
-                                    final MediaPlayer crutch = MediaPlayer.create(this, R.raw.crutch);
-                                    crutch.start();
-                                }
-                            } else {
-                                if (language.equals("nl")){
-                                    final MediaPlayer stok = MediaPlayer.create(this, R.raw.stok);
-                                    stok.start();;
-                                } else {
-                                    final MediaPlayer stick = MediaPlayer.create(this, R.raw.stick);
-                                    stick.start();
-                                }
-                            }
-                        }
-                        if (ex_3_start){
-                            Vibrator vibrator = (Vibrator)getSystemService(Context.VIBRATOR_SERVICE);
-                            vibrator.vibrate(100);
-                        }
-                    }
-                }
-            }
-        }
-
-        TextView tvtimer = findViewById(R.id.tvtimer); tvtimer.setText(String.valueOf(timer_step)); // used to check values
-        TextView tvaverage = findViewById(R.id.tvaverage); tvaverage.setText(String.valueOf(new_average_step));
-        TextView tvaverageaid = findViewById(R.id.tvaverageaid); tvaverageaid.setText(String.valueOf(new_average_aid));
-        TextView tvex_time = findViewById(R.id.tvex_time); tvex_time.setText(String.valueOf(time_ex));
-        TextView tvoffrhytmtimer = findViewById(R.id.tvoffrhythmtimer); tvoffrhytmtimer.setText(String.valueOf(timer_offrhythm));
-        TextView tvoffrhytm = findViewById(R.id.tvoffrhythm); tvoffrhytm.setText(String.valueOf(offrhythm));
-        TextView tvfeedbacktimer = findViewById(R.id.tvfeedbacktimer); tvfeedbacktimer.setText(String.valueOf(timer_feedback));
-    }
-
-    protected void writedatatofile(Context context){
-        try
-        {
-            OutputStreamWriter outputStreamWriter = new OutputStreamWriter(context.openFileOutput("logdata.txt", Context.MODE_APPEND));
-            String data;
-            Calendar calender = Calendar.getInstance();
-            SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm");
-            if (newstart){
-                String date_time = dateFormat.format(calender.getTime());
-                data = (date_time + "n.l." + "Exersice started " + "n.l." + "ti.s av.s ti.a va.a cnst " + "n.l.");
-            } else {
-                data = (Integer.toString(time_step)+"  "+Integer.toString(new_average_step)+"  "+Integer.toString(time_footaid)+"  "+Integer.toString(new_average_aid)+"  "+Boolean.toString(rhythmconsistent)+"n.l.");
-            }
-            BufferedWriter writer = new BufferedWriter(outputStreamWriter);
-            writer.write(data);
-            writer.newLine();
-            writer.close();
-        }
-        catch(IOException e) {
-            e.printStackTrace();
-        }
     }
 
     protected void menu() {
@@ -360,6 +189,173 @@ public class exercisespt1 extends AppCompatActivity {
                 startActivity(new Intent(exercisespt1.this, login.class));
             }
         });
+    }
+
+    protected void practice() {
+        if (readMessage.contains("foot")){ //use of contains while during the data transfer some parts of the string seem to be lost and some parts seem to be added
+            result = "foot";
+        } else if (readMessage.contains("aid")){
+            result = "aid";
+        } else {
+            result = " ";
+        }
+
+        if (ex_1_start||ex_2_start||ex_3_start){
+            time_ex++; // timer to see how long the exercise is been going to determine fase
+            if (newstart){
+                Context context = getApplicationContext();
+                writedatatofile(context); // write time, date and "start exercise" to file to organise the data
+                newstart = false;
+            }
+            if (time_ex > 50) { // start measuring after certain time to allow the user to store the phone away first
+                time_step++;
+                time_footaid++;
+                if (result.equals("aid")) {
+                    time_footaid = 0;
+                }
+                if (result.equals("foot")) {
+                    // average_step
+                    new_measurement_step = time_step; //use timer to determine time between steps
+                    if ((new_measurement_step / old_average_step) > 3) { // don't take outliers into account, can be caused by an external source, like waiting to cross the street
+                        new_measurement_step = old_average_step;
+                    }
+                    new_average_step = ((9 * old_average_step + new_measurement_step) / 10); // approximate average using rolling average, last measurements have most impact
+                    old_average_step = new_average_step;
+
+                    // average_aid
+                    new_measurement_aid = time_footaid;
+                    if ((new_measurement_aid/old_average_aid)>3){ // don't take outliers into account
+                        new_measurement_aid = old_average_aid;
+                    }
+                    new_average_aid = ((9 * old_average_aid + new_measurement_aid) / 10); // approximate average
+                    old_average_aid = new_average_aid;
+                    time_step = 0;
+                }
+
+                if (new_average_aid < 5){
+                    walkinggait = "2-point";
+                } else {
+                    walkinggait = "3-point";
+                }
+            }
+
+            if (time_ex > 100) { // give feedback after some data is collected to have some valid input
+                if (result.equals("foot")){ //start exercise with a step, to match the feedback with foot placement
+                    begin = true;
+                }
+            }
+            if (time_ex > 100 && begin) {
+
+                if (result.equals("foot")){
+                    Context context = getApplicationContext();
+                    writedatatofile(context); // write data to file everytime a step is made
+                }
+
+                timer_offrhythm--;
+                if ((result.equals("foot")) && ((new_measurement_step / old_average_step) < 0.8) || ((new_measurement_step / old_average_step) > 1.2)) { // check if the new step is in rhythm or not
+                    timer_offrhythm = 30; // check if there are multible steps not in rhythm in a certain amount of time
+                    offrhythm = offrhythm + 1;
+                }
+                if (timer_offrhythm <= 0) {
+                    offrhythm = 0;
+                    timer_offrhythm = 30;
+                }
+                if (offrhythm >= 3) {
+                    rhythmconsistent = false; // the rhytm is inconsistent if there are multible steps offrhythm close to each other
+                }
+
+                timer_step++;
+
+                if (timer_step >= new_average_step) { // make sounds in rhythm of average
+                    timer_step = 0;
+                    if ((time_ex < 200) || (!rhythmconsistent)) { // give output in the beginning and when the rhythm is inconsistent, when consistent no output is given
+                        timer_feedback--; // give input at least for 10 steps to get back in rhythm
+                        if (timer_feedback == 0){
+                            timer_feedback = 10;
+                            rhythmconsistent = true;
+                        }
+                        if (ex_1_start) {
+                            final MediaPlayer biep1 = MediaPlayer.create(this, R.raw.biep1);
+                            biep1.start();
+                        }
+                        if (ex_2_start) {
+                            if (language.equals("nl")){ // change language of voice based on the language of the app
+                                final MediaPlayer voet = MediaPlayer.create(this, R.raw.voet);
+                                voet.start();;
+                            } else {
+                                final MediaPlayer foot = MediaPlayer.create(this, R.raw.foot);
+                                foot.start();;
+                            }
+                        }
+                        if (ex_3_start){
+                            Vibrator vibrator = (Vibrator)getSystemService(Context.VIBRATOR_SERVICE);
+                            vibrator.vibrate(100);
+                        }
+                    }
+                }
+
+                if (timer_step == new_average_aid && walkinggait.equals("3-point")) { // make sounds in rhythm of average and only provide output for the walking aid if the users walks with a 3 point gait to prevent overlap of output
+                    if ((time_ex < 200) || (!rhythmconsistent)) { // give input in the beginning and when the rhythm is not constant
+                        if (ex_1_start) {
+                            final MediaPlayer biep2 = MediaPlayer.create(this, R.raw.biep2); // use of other tone to distinguish between the foot and walking aid
+                            biep2.start();
+                        }
+                        if (ex_2_start) {
+                            SharedPreferences sp = getSharedPreferences("sharedprefs", Activity.MODE_PRIVATE);
+                            if ((sp.getString(walkingaid, "Stick").equals("Crutch"))) { // in the profile is saved which walking aid is used, match the voice to represent that walking aid
+                                if (language.equals("nl")){  // change language of voice based on the language of the app
+                                    final MediaPlayer kruk = MediaPlayer.create(this, R.raw.kruk);
+                                    kruk.start();;
+                                } else {
+                                    final MediaPlayer crutch = MediaPlayer.create(this, R.raw.crutch);
+                                    crutch.start();
+                                }
+                            } else {
+                                if (language.equals("nl")){  // change language of voice based on the language of the app
+                                    final MediaPlayer stok = MediaPlayer.create(this, R.raw.stok);
+                                    stok.start();;
+                                } else {
+                                    final MediaPlayer stick = MediaPlayer.create(this, R.raw.stick);
+                                    stick.start();
+                                }
+                            }
+                        }
+                        if (ex_3_start){
+                            Vibrator vibrator = (Vibrator)getSystemService(Context.VIBRATOR_SERVICE);
+                            vibrator.vibrate(100);
+                        }
+                    }
+                }
+            }
+        }
+
+//        TextView tvtimer = findViewById(R.id.tvtimer); tvtimer.setText(String.valueOf(timer_step)); // used to check values when developing
+//        TextView tvaverage = findViewById(R.id.tvaverage); tvaverage.setText(String.valueOf(new_average_step));
+//        TextView tvaverageaid = findViewById(R.id.tvaverageaid); tvaverageaid.setText(String.valueOf(new_average_aid));
+//        TextView tvex_time = findViewById(R.id.tvex_time); tvex_time.setText(String.valueOf(time_ex));
+    }
+
+    protected void writedatatofile(Context context){
+        try
+        {
+            OutputStreamWriter outputStreamWriter = new OutputStreamWriter(context.openFileOutput("logdata.txt", Context.MODE_APPEND));
+            String data;
+            Calendar calender = Calendar.getInstance();
+            SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm");
+            if (newstart){
+                String date_time = dateFormat.format(calender.getTime());
+                data = (date_time + "n.l." + "Exersice started " + "n.l." + "ti.s av.s ti.a av.a ga cnst " + "n.l."); // n.l. used to make data go to the next line, \n didn't work
+            } else {
+                data = (Integer.toString(time_step)+"  "+Integer.toString(new_average_step)+"  "+Integer.toString(time_footaid)+"  "+Integer.toString(new_average_aid)+"  "+walkinggait+"   "+Boolean.toString(rhythmconsistent)+"n.l.");
+            }
+            BufferedWriter writer = new BufferedWriter(outputStreamWriter);
+            writer.append(data);
+            //writer.newLine(); didn't work to make new line
+            writer.close();
+        }
+        catch(IOException e) {
+            e.printStackTrace();
+        }
     }
 
     protected void startexercises() {
@@ -427,8 +423,8 @@ public class exercisespt1 extends AppCompatActivity {
     }
 
     protected void resetvalue(){
-        time_ex = 0;
-        SharedPreferences sp = getSharedPreferences("sharedprefs", Activity.MODE_PRIVATE);
+        time_ex = 0; // reset exercise timer
+        SharedPreferences sp = getSharedPreferences("sharedprefs", Activity.MODE_PRIVATE); // save old values to use as starting point in next exercise
         SharedPreferences.Editor editor = sp.edit();
         editor.putInt("average_aid",  old_average_aid);
         editor.putInt("average_step",  old_average_step);

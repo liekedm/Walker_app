@@ -21,10 +21,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <include
-        layout="@layout/bottommenu"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    <include layout="@layout/bottommenu" />
 
     <!-- Exercise 1 -->
 
@@ -242,7 +239,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:text="extime"
-        android:visibility="visible"
+        android:visibility="invisible"
         app:layout_constraintStart_toStartOf="@+id/input1"
         app:layout_constraintTop_toBottomOf="@+id/input1" />
 
@@ -284,6 +281,7 @@
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:background="@color/transparent"
+        android:visibility="visible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/iv_bg_exercise3" />
