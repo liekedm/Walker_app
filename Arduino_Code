@@ -1,0 +1,19 @@
+int fsrPinHeel = A0;
+int fsrReadingHeel;
+int fsrReadingHeelOld; 
+ 
+void setup(void) {
+  Serial.begin(9600);
+}
+ 
+void loop(void) {
+  fsrReadingHeel = analogRead(fsrPinHeel);
+  if (fsrReadingHeel >= (fsrReadingHeelOld + 800)){ //notice placement by an increase of forse
+    Serial.print("xaid"); //or xfoot 
+  }
+  else {
+    Serial.print(" ");
+  }
+  fsrReadingHeelOld  = fsrReadingHeel;
+  delay(200);
+}
